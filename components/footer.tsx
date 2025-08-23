@@ -10,7 +10,7 @@ export default function Footer() {
         </div>
         <p className="mb-4">© 2024 Lemon - Papelaria Criativa. Todos os direitos reservados.</p>
         <div className="flex justify-center space-x-4">
-          <Link href="#" className="hover:text-pink-400 transition-colors">
+          <Link href="https://www.instagram.com/lemonpapelaria/" className="hover:text-pink-400 transition-colors">
             Instagram
           </Link>
           <Link href="#" className="hover:text-pink-400 transition-colors">

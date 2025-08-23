@@ -51,28 +51,6 @@ export default function ContatoPage() {
 
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <div className="text-2xl">📍</div>
-                    <div>
-                      <h3 className="font-semibold text-gray-800">Endereço</h3>
-                      <p className="text-gray-600">
-                        Rua das Flores, 123
-                        <br />
-                        Centro, São Paulo - SP
-                        <br />
-                        CEP: 01234-567
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="text-2xl">📞</div>
-                    <div>
-                      <h3 className="font-semibold text-gray-800">Telefone</h3>
-                      <p className="text-gray-600">(11) 9999-8888</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
                     <div className="text-2xl">✉️</div>
                     <div>
                       <h3 className="font-semibold text-gray-800">E-mail</h3>
@@ -83,7 +61,7 @@ export default function ContatoPage() {
                   <div className="flex items-start space-x-4">
                     <div className="text-2xl">🕒</div>
                     <div>
-                      <h3 className="font-semibold text-gray-800">Horário de Atendimento</h3>
+                      <h3 className="font-semibold text-gray-800">Horário de Atendimento Online</h3>
                       <p className="text-gray-600">
                         Segunda a Sexta: 9h às 18h
                         <br />
@@ -99,7 +77,7 @@ export default function ContatoPage() {
                 <div className="mt-8">
                   <h3 className="font-semibold text-gray-800 mb-4">Siga-nos nas Redes Sociais</h3>
                   <div className="flex space-x-4">
-                    <a href="#" className="bg-pink-500 text-white p-3 rounded-full hover:bg-pink-600 transition-colors">
+                    <a href="https://www.instagram.com/lemonpapelaria/" className="bg-pink-500 text-white p-3 rounded-full hover:bg-pink-600 transition-colors">
                       📷 Instagram
                     </a>
                     <a href="#" className="bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 transition-colors">
@@ -224,7 +202,7 @@ export default function ContatoPage() {
                 {
                   question: "Vocês têm loja física?",
                   answer:
-                    "Atualmente somos uma loja online, mas estamos planejando abrir nossa primeira loja física em breve. Acompanhe nossas redes sociais para novidades!",
+                    "Atualmente operamos exclusivamente online, oferecendo uma experiência de compra prática e segura para nossos clientes em todo o Brasil.",
                 },
               ].map((faq, index) => (
                 <div key={index} className="bg-white rounded-lg p-6 shadow-md">

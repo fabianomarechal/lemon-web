@@ -94,9 +94,9 @@ export default function SobrePage() {
             <div className="max-w-3xl mx-auto">
               <h2 className="text-3xl font-bold text-gray-800 mb-6">Nossa Missão</h2>
               <p className="text-xl text-gray-600 mb-8">
-                "Tornar a criatividade acessível e inspirar pessoas a expressarem sua personalidade única através de
+                &quot;Tornar a criatividade acessível e inspirar pessoas a expressarem sua personalidade única através de
                 produtos de papelaria cuidadosamente selecionados, criando momentos especiais no dia a dia de cada
-                cliente."
+                cliente.&quot;
               </p>
               <div className="bg-pink-50 rounded-lg p-8">
                 <h3 className="font-semibold text-lg text-gray-800 mb-4">Por que escolher a Lemon?</h3>

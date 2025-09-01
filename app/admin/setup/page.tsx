@@ -42,15 +42,19 @@ export default function ConfigPage() {
       setSuccess('Usuário administrador criado com sucesso! Agora você pode fazer login.');
       setPassword('');
       setConfirmPassword('');
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error('Erro ao criar usuário:', error);
       
-      if (error.code === 'auth/email-already-in-use') {
-        setError('Este email já está em uso. Tente fazer login ou recuperar a senha.');
-      } else if (error.code === 'auth/invalid-email') {
-        setError('Email inválido.');
+      if (error && typeof error === 'object' && 'code' in error) {
+        if (error.code === 'auth/email-already-in-use') {
+          setError('Este email já está em uso. Tente fazer login ou recuperar a senha.');
+        } else if (error.code === 'auth/invalid-email') {
+          setError('Email inválido.');
+        } else {
+          setError('Ocorreu um erro ao criar o usuário. Por favor, tente novamente.');
+        }
       } else {
-        setError('Ocorreu um erro ao criar o usuário. Por favor, tente novamente.');
+        setError('Ocorreu um erro desconhecido. Por favor, tente novamente.');
       }
     } finally {
       setLoading(false);

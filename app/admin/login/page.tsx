@@ -28,13 +28,15 @@ export default function AdminLoginPage() {
     try {
       await signInWithEmailAndPassword(clientAuth, email, password);
       router.push('/admin');
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       let errorMessage = 'Falha ao fazer login. Verifique suas credenciais.';
       
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        errorMessage = 'Email ou senha incorretos.';
-      } else if (error.code === 'auth/too-many-requests') {
-        errorMessage = 'Muitas tentativas. Tente novamente mais tarde.';
+      if (error && typeof error === 'object' && 'code' in error) {
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          errorMessage = 'Email ou senha incorretos.';
+        } else if (error.code === 'auth/too-many-requests') {
+          errorMessage = 'Muitas tentativas. Tente novamente mais tarde.';
+        }
       }
       
       setError(errorMessage);

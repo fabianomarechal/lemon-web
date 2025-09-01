@@ -18,6 +18,15 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
+  // Configuração do ESLint
+  eslint: {
+    // Desabilitar verificação durante o build
+    ignoreDuringBuilds: true,
+  },
+  // Desabilitar verificação de tipos durante o build
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;

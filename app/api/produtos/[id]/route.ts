@@ -4,19 +4,24 @@ import { NextRequest, NextResponse } from 'next/server';
 // GET - Buscar um produto específico
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    // Em vez de usar o valor diretamente, fazemos uma verificação condicional primeiro
-    if (!params?.id) {
+    // Primeiro, garantimos que o context.params existe
+    if (!context?.params) {
+      return NextResponse.json({ error: 'Parâmetros não encontrados' }, { status: 400 });
+    }
+    
+    // Agora extraímos o ID de forma segura - com await para garantir que o params seja resolvido
+    const params = await context.params;
+    const id = params.id;
+    
+    if (!id) {
       return NextResponse.json({ error: 'ID não fornecido' }, { status: 400 });
     }
     
-    // Obtemos o valor em uma variável separada
-    const productId = params.id;
-    
     // Usamos o ID para a consulta
-    const docRef = adminDb.collection('produtos').doc(productId);
+    const docRef = adminDb.collection('produtos').doc(id);
     const doc = await docRef.get();
     
     if (!doc.exists) {
@@ -36,18 +41,26 @@ export async function GET(
 // PUT - Atualizar um produto
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    if (!params?.id) {
+    // Primeiro, garantimos que o context.params existe
+    if (!context?.params) {
+      return NextResponse.json({ error: 'Parâmetros não encontrados' }, { status: 400 });
+    }
+    
+    // Agora extraímos o ID de forma segura - com await para garantir que o params seja resolvido
+    const params = await context.params;
+    const id = params.id;
+    
+    if (!id) {
       return NextResponse.json({ error: 'ID não fornecido' }, { status: 400 });
     }
     
-    const productId = params.id;
     const updates = await request.json();
     
     // Verifica se o produto existe
-    const docRef = adminDb.collection('produtos').doc(productId);
+    const docRef = adminDb.collection('produtos').doc(id);
     const doc = await docRef.get();
     
     if (!doc.exists) {
@@ -62,7 +75,7 @@ export async function PUT(
     await docRef.update(updatedProduct);
     
     return NextResponse.json({
-      id: productId,
+      id: id,
       ...updatedProduct
     });
   } catch (error) {
@@ -74,17 +87,24 @@ export async function PUT(
 // DELETE - Remover um produto
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    if (!params?.id) {
+    // Primeiro, garantimos que o context.params existe
+    if (!context?.params) {
+      return NextResponse.json({ error: 'Parâmetros não encontrados' }, { status: 400 });
+    }
+    
+    // Agora extraímos o ID de forma segura - com await para garantir que o params seja resolvido
+    const params = await context.params;
+    const id = params.id;
+    
+    if (!id) {
       return NextResponse.json({ error: 'ID não fornecido' }, { status: 400 });
     }
     
-    const productId = params.id;
-    
     // Verifica se o produto existe
-    const docRef = adminDb.collection('produtos').doc(productId);
+    const docRef = adminDb.collection('produtos').doc(id);
     const doc = await docRef.get();
     
     if (!doc.exists) {

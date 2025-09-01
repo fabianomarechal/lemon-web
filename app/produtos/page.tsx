@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 export default function ProdutosPage() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
-  const [categorias, setCategorias] = useState<string[]>([]);
+  const [, setCategorias] = useState<string[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,12 +27,16 @@ export default function ProdutosPage() {
     async function carregarProdutos() {
       try {
         setLoading(true);
-        const url = categoriaSelecionada 
+        // Construir a URL usando window.location.origin para garantir que seja válida
+        const baseUrl = window.location.origin;
+        const urlPath = categoriaSelecionada 
           ? `/api/produtos?categoria=${encodeURIComponent(categoriaSelecionada)}`
           : '/api/produtos';
+        
+        const fullUrl = `${baseUrl}${urlPath}`;
           
-        console.log('Tentando buscar produtos de:', url);
-        const res = await fetch(url);
+        console.log('Tentando buscar produtos de:', fullUrl);
+        const res = await fetch(fullUrl);
         
         if (!res.ok) {
           throw new Error(`Falha ao carregar produtos: ${res.status} ${res.statusText}`);

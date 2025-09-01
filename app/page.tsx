@@ -1,7 +1,6 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import Link from "next/link";
-import { clientDb } from "@/lib/firebase";
 
 // Definição inline do tipo para evitar problemas de importação
 interface ProdutoSimples {
@@ -18,9 +17,15 @@ export default async function HomePage() {
   const produtosDestaque: ProdutoSimples[] = [];
   
   try {
-    // Usando a API normal do Next.js
-    const res = await fetch('http://localhost:3000/api/produtos?destaque=true', {
-      cache: 'no-store'
+    // Usando a URL absoluta que funciona em qualquer ambiente
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:3000' 
+        : '';
+    
+    const res = await fetch(new URL('/api/produtos?destaque=true', baseUrl || 'http://localhost:3000'), {
+      next: { revalidate: 300 } // Revalidate a cada 5 minutos
     });
     
     if (res.ok) {

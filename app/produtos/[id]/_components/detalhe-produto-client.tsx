@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { Produto } from '@/types/produto';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-export default function DetalheProdutoPage() {
-  const params = useParams();
-  const id = params?.id as string;
+interface DetalheProdutoClientProps {
+  id: string;
+}
+
+export default function DetalheProdutoClient({ id }: DetalheProdutoClientProps) {
   const router = useRouter();
   
   const [produto, setProduto] = useState<Produto | null>(null);
@@ -21,6 +22,7 @@ export default function DetalheProdutoPage() {
     async function carregarProduto() {
       try {
         setLoading(true);
+        // Construir a URL completa para resolver problemas de URL relativa
         const baseUrl = window.location.origin;
         const res = await fetch(`${baseUrl}/api/produtos/${id}`);
         
@@ -41,9 +43,7 @@ export default function DetalheProdutoPage() {
       }
     }
     
-    if (id) {
-      carregarProduto();
-    }
+    carregarProduto();
   }, [id]);
 
   return (

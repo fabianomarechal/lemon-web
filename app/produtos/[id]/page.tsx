@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { Produto } from '@/types/produto';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function DetalheProdutoPage() {
   const params = useParams();

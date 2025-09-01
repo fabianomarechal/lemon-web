@@ -1,0 +1,6 @@
+// Instruções para salvar a imagem
+// 1. Baixe a imagem do banner da Lemon que você compartilhou
+// 2. Salve-a como "stationery-background.jpg" na pasta "/public/images/"
+// 3. Se preferir usar outro nome para a imagem, atualize o caminho no arquivo app/page.tsx
+
+// Este é apenas um arquivo de instrução e pode ser excluído após salvar a imagem.

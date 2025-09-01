@@ -9,11 +9,14 @@ export default function HomePage() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative h-[60vh] flex items-center justify-center text-center text-white bg-gradient-to-br from-yellow-300 via-pink-300 to-blue-300">
-          <div className="absolute inset-0 bg-black opacity-20"></div>
-          <div className="relative z-10 p-6">
+        <section className="relative h-[60vh] flex items-center justify-center text-center text-white" 
+                 style={{backgroundImage: "url('/images/stationery-background.jpg')", 
+                         backgroundSize: "cover", 
+                         backgroundPosition: "center"}}>
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-300/60 via-pink-300/60 to-blue-300/60"></div>
+          <div className="relative z-10 p-6 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg py-8 px-10">
             <h1 className="font-fredoka text-6xl md:text-8xl text-shadow text-yellow-300">Lemon</h1>
-            <p className="text-xl md:text-2xl mt-2 font-semibold">papelaria fofa e criativa</p>
+            <p className="text-xl md:text-2xl mt-2 font-semibold text-pink-600">papelaria fofa e criativa</p>
             <Link
               href="/produtos"
               className="inline-block mt-8 px-8 py-3 bg-pink-500 text-white font-semibold rounded-full shadow-lg hover:bg-pink-600 transition-transform transform hover:scale-105"

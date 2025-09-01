@@ -1,0 +1,21 @@
+'use client';
+
+import { ProdutoFormData } from '@/types/produto';
+import { useRouter } from 'next/navigation';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import AdminProtect from '@/components/admin-protect';
+
+export default function EditarProduto({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const { id } = params;
+  const isEdicao = id !== 'novo';
+  
+  const [formData, setFormData] = useState<ProdutoFormData>({
+    nome: '',
+    descricao: '',
+    preco: 0,
+    categorias: [],
+    imagens: [],
+    estoque: 0,
+    destaque: false
+  });

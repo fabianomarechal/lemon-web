@@ -1,10 +1,9 @@
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-
-// Para o lado do cliente
+// Imports para o lado do cliente
 import { initializeApp as initializeClientApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFirestore as getClientFirestore } from 'firebase/firestore';
 
+// Configuração do Firebase Client
 const clientConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -17,40 +16,19 @@ const clientConfig = {
 // Inicializa Firebase do lado do cliente
 let clientApp;
 let clientDb;
+let clientAuth;
 
 if (typeof window !== 'undefined') {
   try {
     clientApp = initializeClientApp(clientConfig);
     clientDb = getClientFirestore(clientApp);
+    clientAuth = getAuth(clientApp);
+    
+    // Adicionar um log para depuração
+    console.log('Firebase Auth inicializado com sucesso', !!clientAuth);
   } catch (error) {
     console.error('Erro na inicialização do Firebase cliente:', error);
   }
 }
 
-export { clientApp, clientDb };
-
-// Inicializa Firebase Admin para o servidor (API routes)
-const apps = getApps();
-
-if (!apps.length) {
-  // Se estamos em ambiente de desenvolvimento, pode-se usar um arquivo de config
-  if (process.env.NODE_ENV !== 'production') {
-    try {
-      initializeApp({
-        credential: cert({
-          projectId: process.env.FIREBASE_PROJECT_ID,
-          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-          privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        }),
-        databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
-      });
-    } catch (error) {
-      console.error('Firebase admin initialization error', error);
-    }
-  } else {
-    // Em produção, confia nas variáveis de ambiente padrão
-    initializeApp();
-  }
-}
-
-export const db = getFirestore();
+export { clientApp, clientAuth, clientDb };

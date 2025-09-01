@@ -1,26 +1,58 @@
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import Link from "next/link"
+import Footer from "@/components/footer";
+import Header from "@/components/header";
+import Link from "next/link";
+import { clientDb } from "@/lib/firebase";
 
-export default function HomePage() {
+// Definição inline do tipo para evitar problemas de importação
+interface ProdutoSimples {
+  id: string;
+  nome: string;
+  descricao: string;
+  preco: number;
+  imagens?: string[];
+  destaque?: boolean;
+}
+
+export default async function HomePage() {
+  // Buscar produtos em destaque pelo lado do cliente
+  const produtosDestaque: ProdutoSimples[] = [];
+  
+  try {
+    // Usando a API normal do Next.js
+    const res = await fetch('http://localhost:3000/api/produtos?destaque=true', {
+      cache: 'no-store'
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      produtosDestaque.push(...data);
+    }
+  } catch (error) {
+    console.error('Erro ao buscar produtos em destaque:', error);
+  }
+  
+  // Cores alternadas para os produtos
+  const bgColors = [
+    'bg-yellow-100',
+    'bg-green-100',
+    'bg-purple-100',
+    'bg-blue-100',
+    'bg-pink-100',
+  ];
+  
   return (
     <div className="min-h-screen">
       <Header />
 
       <main>
         {/* Hero Section */}
-        <section className="relative h-[60vh] flex items-center justify-center text-center text-white" 
-                 style={{backgroundImage: "url('/images/stationery-background.jpg')", 
-                         backgroundSize: "cover", 
-                         backgroundPosition: "center"}}>
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-300/60 via-pink-300/60 to-blue-300/60"></div>
-          <div className="relative z-10 p-6 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg py-8 px-10">
-            <h1 className="font-fredoka text-6xl md:text-8xl text-shadow text-yellow-300">Lemon</h1>
-            <p className="text-xl md:text-2xl mt-2 font-semibold text-pink-600">papelaria fofa e criativa</p>
-            <Link
-              href="/produtos"
-              className="inline-block mt-8 px-8 py-3 bg-pink-500 text-white font-semibold rounded-full shadow-lg hover:bg-pink-600 transition-transform transform hover:scale-105"
-            >
+        <section className="bg-yellow-50 py-24">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">Lemon Papelaria</h1>
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
+              Artigos de papelaria e escritório de qualidade para todas as suas necessidades.
+            </p>
+            <Link href="/produtos" className="bg-yellow-500 text-white py-3 px-8 rounded-lg hover:bg-yellow-600 transition-colors text-lg font-medium">
               Ver Produtos
             </Link>
           </div>
@@ -29,54 +61,58 @@ export default function HomePage() {
         {/* Featured Products */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">Novidades</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-              {[
-                {
-                  name: "Caderno Limão Siciliano",
-                  description: "Perfeito para suas anotações mais criativas!",
-                  price: "R$ 25,00",
-                  bg: "bg-blue-50",
-                },
-                {
-                  name: "Kit Lápis Pastel",
-                  description: "Cores suaves para dar vida aos seus desenhos.",
-                  price: "R$ 18,00",
-                  bg: "bg-pink-50",
-                },
-                {
-                  name: "Pasta Organizadora",
-                  description: "Mantenha tudo organizado com muito estilo.",
-                  price: "R$ 32,00",
-                  bg: "bg-blue-50",
-                },
-                {
-                  name: "Washi Tapes Citrus",
-                  description: "Decore seu planner, bullet journal e muito mais.",
-                  price: "R$ 15,00",
-                  bg: "bg-pink-50",
-                },
-              ].map((product, index) => (
-                <div
-                  key={index}
-                  className={`${product.bg} rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300`}
-                >
-                  <div className="w-full h-56 bg-gradient-to-br from-yellow-200 to-pink-200 flex items-center justify-center">
-                    <span className="text-6xl">🍋</span>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-semibold text-lg text-gray-800">{product.name}</h3>
-                    <p className="text-gray-600 mt-2">{product.description}</p>
-                    <div className="mt-4 flex justify-between items-center">
-                      <span className="font-bold text-xl text-pink-500">{product.price}</span>
-                      <button className="bg-yellow-400 text-white px-4 py-2 rounded-full hover:bg-yellow-500 transition-colors">
-                        Comprar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="flex justify-between items-center mb-10">
+              <h2 className="text-3xl font-bold text-gray-800">Produtos em Destaque</h2>
+              <Link href="/produtos" className="text-pink-500 hover:text-pink-700 font-medium">
+                Ver todos →
+              </Link>
             </div>
+            
+            {produtosDestaque.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500">Nenhum produto em destaque encontrado</p>
+                <Link href="/produtos" className="inline-block mt-4 text-pink-500 hover:text-pink-700">
+                  Ver todos os produtos
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {produtosDestaque.slice(0, 4).map((produto, index) => (
+                  <Link
+                    href={`/produtos/${produto.id}`}
+                    key={produto.id}
+                    className={`${bgColors[index % bgColors.length]} rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300`}
+                  >
+                    <div className="w-full h-56 bg-gradient-to-br from-yellow-200 to-pink-200 flex items-center justify-center">
+                      {produto.imagens && produto.imagens.length > 0 ? (
+                        <img 
+                          src={produto.imagens[0]} 
+                          alt={produto.nome} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-6xl">🍋</span>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <h3 className="font-semibold text-lg text-gray-800">{produto.nome}</h3>
+                      <p className="text-gray-600 mt-2 line-clamp-2">{produto.descricao}</p>
+                      <div className="mt-4 flex justify-between items-center">
+                        <span className="font-bold text-xl text-pink-500">
+                          {new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                          }).format(produto.preco)}
+                        </span>
+                        <div className="bg-yellow-400 text-white px-4 py-2 rounded-full hover:bg-yellow-500 transition-colors">
+                          Comprar
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
@@ -101,5 +137,5 @@ export default function HomePage() {
 
       <Footer />
     </div>
-  )
+  );
 }

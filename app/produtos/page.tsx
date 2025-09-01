@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 import { Produto } from '@/types/produto';
 import Link from 'next/link';
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import { useEffect, useState } from 'react';
 
 export default function ProdutosPage() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -31,13 +31,15 @@ export default function ProdutosPage() {
           ? `/api/produtos?categoria=${encodeURIComponent(categoriaSelecionada)}`
           : '/api/produtos';
           
+        console.log('Tentando buscar produtos de:', url);
         const res = await fetch(url);
         
         if (!res.ok) {
-          throw new Error('Falha ao carregar produtos');
+          throw new Error(`Falha ao carregar produtos: ${res.status} ${res.statusText}`);
         }
         
         const data = await res.json();
+        console.log('Produtos carregados:', data);
         setProdutos(data);
         
         // Extrair categorias únicas
@@ -47,7 +49,7 @@ export default function ProdutosPage() {
           setCategorias(categoriasUnicas);
         }
       } catch (err) {
-        console.error('Erro:', err);
+        console.error('Erro ao carregar produtos:', err);
         setError('Não foi possível carregar os produtos. Tente novamente mais tarde.');
       } finally {
         setLoading(false);

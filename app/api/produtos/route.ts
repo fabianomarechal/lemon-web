@@ -1,15 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase';
+import { adminDb } from '@/lib/firebase/admin';
 import { Produto } from '@/types/produto';
+import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Listar todos os produtos
 export async function GET(req: NextRequest) {
   try {
+    console.log('API - Iniciando busca de produtos');
     const { searchParams } = new URL(req.url);
     const categoria = searchParams.get('categoria');
     const destaque = searchParams.get('destaque');
     
-    let query = db.collection('produtos');
+    console.log('API - Parâmetros:', { categoria, destaque });
+    
+    let query = adminDb.collection('produtos');
     
     if (categoria) {
       query = query.where('categorias', 'array-contains', categoria);
@@ -19,7 +22,10 @@ export async function GET(req: NextRequest) {
       query = query.where('destaque', '==', true);
     }
     
+    console.log('API - Executando consulta ao Firestore');
     const snapshot = await query.get();
+    console.log('API - Documentos encontrados:', snapshot.size);
+    
     const produtos: Produto[] = [];
     
     snapshot.forEach(doc => {
@@ -29,6 +35,7 @@ export async function GET(req: NextRequest) {
       });
     });
     
+    console.log('API - Retornando produtos:', produtos.length);
     return NextResponse.json(produtos);
   } catch (error) {
     console.error('Erro ao buscar produtos:', error);
@@ -46,7 +53,7 @@ export async function POST(req: NextRequest) {
       dataAtualizacao: new Date().toISOString()
     };
     
-    const docRef = await db.collection('produtos').add(novoProduto);
+    const docRef = await adminDb.collection('produtos').add(novoProduto);
     
     return NextResponse.json({ 
       id: docRef.id, 

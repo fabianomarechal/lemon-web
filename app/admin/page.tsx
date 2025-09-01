@@ -1,16 +1,48 @@
 'use client';
 
-import Link from 'next/link';
-import Header from "@/components/header";
+import AdminAuthStatus from "@/components/admin-auth-status";
+import AdminProtect from "@/components/admin-protect";
 import Footer from "@/components/footer";
+import Header from "@/components/header";
+import { clientAuth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
+import Link from 'next/link';
+import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
-  return (
-    <div className="min-h-screen">
-      <Header />
+  const router = useRouter();
+  
+  const handleLogout = async () => {
+    if (!clientAuth) {
+      console.error('Auth não está inicializado');
+      return;
+    }
+    
+    try {
+      await signOut(clientAuth);
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
 
-      <main className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-6">Área Administrativa</h1>
+  return (
+    <AdminProtect>
+      <div className="min-h-screen">
+        <Header />
+
+        <main className="container mx-auto py-8 px-4">
+          <AdminAuthStatus />
+          
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl font-bold">Área Administrativa</h1>
+            <button 
+              onClick={handleLogout}
+              className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition-colors"
+            >
+              Sair
+            </button>
+          </div>
         
         <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md">
@@ -56,5 +88,6 @@ export default function AdminPage() {
 
       <Footer />
     </div>
+    </AdminProtect>
   );
 }

@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
+import AdminAuthStatus from '@/components/admin-auth-status';
+import AdminProtect from '@/components/admin-protect';
+import { ProdutoFormData } from '@/types/produto';
 import { useRouter } from 'next/navigation';
-import { Produto, ProdutoFormData } from '@/types/produto';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 export default function EditarProduto({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -145,17 +147,20 @@ export default function EditarProduto({ params }: { params: { id: string } }) {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-6">Carregando produto...</h1>
-      </div>
+      <AdminProtect>
+        <div className="container mx-auto p-4">
+          <h1 className="text-2xl font-bold mb-6">Carregando produto...</h1>
+        </div>
+      </AdminProtect>
     );
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">
-        {isEdicao ? 'Editar Produto' : 'Novo Produto'}
-      </h1>
+    <AdminProtect>
+      <div className="container mx-auto py-8 px-4">
+        <AdminAuthStatus />
+        
+        <h1 className="text-2xl font-bold mb-6">{isEdicao ? 'Editar' : 'Novo'} Produto</h1>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -320,5 +325,6 @@ export default function EditarProduto({ params }: { params: { id: string } }) {
         </div>
       </form>
     </div>
+    </AdminProtect>
   );
 }

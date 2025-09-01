@@ -1,25 +1,36 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Produto } from '@/types/produto';
-import Header from "@/components/header";
 import Footer from "@/components/footer";
+import Header from "@/components/header";
+import { Produto } from '@/types/produto';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function DetalheProduto({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const { id } = params;
+  // Armazenar o ID em uma variável de estado em vez de usar diretamente do params
+  const [productId, setProductId] = useState<string | null>(null);
   
   const [produto, setProduto] = useState<Produto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [imagemAtiva, setImagemAtiva] = useState(0);
 
+  // Inicializar o ID do produto a partir dos parâmetros
+  useEffect(() => {
+    if (params?.id) {
+      setProductId(params.id);
+    }
+  }, [params]);
+
+  // Carregar os dados do produto quando o ID estiver disponível
   useEffect(() => {
     async function carregarProduto() {
+      if (!productId) return;
+      
       try {
         setLoading(true);
-        const res = await fetch(`/api/produtos/${id}`);
+        const res = await fetch(`/api/produtos/${productId}`);
         
         if (!res.ok) {
           if (res.status === 404) {
@@ -39,7 +50,7 @@ export default function DetalheProduto({ params }: { params: { id: string } }) {
     }
     
     carregarProduto();
-  }, [id]);
+  }, [productId]);
 
   return (
     <div className="min-h-screen">

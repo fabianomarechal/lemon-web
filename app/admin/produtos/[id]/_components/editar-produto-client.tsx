@@ -2,9 +2,11 @@
 
 import AdminAuthStatus from '@/components/admin-auth-status';
 import AdminProtect from '@/components/admin-protect';
+import MultiImageUpload from '@/components/multi-image-upload';
 import { ProdutoFormData } from '@/types/produto';
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface EditarProdutoClientProps {
   id: string;
@@ -25,9 +27,9 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
   });
   
   const [categoriaInput, setCategoriaInput] = useState('');
-  const [imagemInput, setImagemInput] = useState('');
   const [loading, setLoading] = useState(isEdicao);
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (isEdicao) {
@@ -104,52 +106,61 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
     }));
   };
   
-  const handleAddImagem = () => {
-    if (imagemInput.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        imagens: [...prev.imagens, imagemInput.trim()]
-      }));
-      setImagemInput('');
-    }
-  };
-  
-  const handleRemoveImagem = (index: number) => {
+  const handleImagesChange = (images: string[]) => {
     setFormData(prev => ({
       ...prev,
-      imagens: prev.imagens.filter((_, i) => i !== index)
+      imagens: images
     }));
   };
   
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaving(true);
     
     try {
-      const url = isEdicao ? `/api/produtos/${id}` : '/api/produtos';
-      const method = isEdicao ? 'PUT' : 'POST';
-      
-      const res = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      if (!res.ok) {
-        throw new Error('Falha ao salvar produto');
+      if (isEdicao) {
+        const response = await fetch(`/api/admin/produtos/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao atualizar produto');
+        }
+
+        toast.success('Produto atualizado com sucesso!');
+      } else {
+        const response = await fetch('/api/admin/produtos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao criar produto');
+        }
+
+        toast.success('Produto criado com sucesso!');
+        // Redirecionar para a página de listagem ou para o produto criado
+        router.push('/admin/produtos');
       }
-      
-      router.push('/admin/produtos');
-    } catch (err) {
-      console.error('Erro ao salvar produto:', err);
-      setError('Não foi possível salvar o produto. Tente novamente mais tarde.');
+    } catch (error) {
+      console.error('Erro:', error);
+      toast.error('Ocorreu um erro ao salvar o produto.');
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
     <AdminProtect>
       <div className="min-h-screen bg-gray-100">
+        <Toaster position="top-right" />
         <div className="container mx-auto py-8 px-4">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold mb-6">{isEdicao ? 'Editar' : 'Novo'} Produto</h1>
@@ -286,46 +297,29 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
                   
                   {/* Imagens */}
                   <div className="col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Imagens (URLs)</label>
-                    <div className="flex flex-wrap gap-4 mb-4">
-                      {formData.imagens.map((img, index) => (
-                        <div key={index} className="relative group">
-                          <img src={img} alt="Preview" className="h-20 w-auto object-contain" />
-                          <button 
-                            type="button"
-                            onClick={() => handleRemoveImagem(index)}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            &times;
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex">
-                      <input
-                        type="text"
-                        value={imagemInput}
-                        onChange={(e) => setImagemInput(e.target.value)}
-                        placeholder="URL da imagem"
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleAddImagem}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600"
-                      >
-                        Adicionar
-                      </button>
-                    </div>
+                    <MultiImageUpload 
+                      existingImages={formData.imagens} 
+                      onImagesChange={handleImagesChange}
+                      maxImages={5}
+                    />
                   </div>
                 </div>
                 
                 <div className="mt-8 flex justify-end">
                   <button
                     type="submit"
-                    className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled={saving}
+                    className={`${
+                      saving ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'
+                    } text-white py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors flex items-center`}
                   >
-                    {isEdicao ? 'Atualizar' : 'Criar'} Produto
+                    {saving && (
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    )}
+                    {saving ? 'Salvando...' : (isEdicao ? 'Atualizar' : 'Criar')} {!saving && 'Produto'}
                   </button>
                 </div>
               </form>

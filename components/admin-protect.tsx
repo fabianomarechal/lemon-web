@@ -1,6 +1,6 @@
 'use client';
 
-import { clientAuth } from '@/lib/firebase';
+import { initializeFirebaseClient } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,8 @@ export default function AdminProtect({ children }: { children: React.ReactNode }
   const router = useRouter();
 
   useEffect(() => {
+    const { clientAuth } = initializeFirebaseClient();
+    
     if (!clientAuth) {
       console.error("Auth não inicializado corretamente");
       router.push('/admin/login');

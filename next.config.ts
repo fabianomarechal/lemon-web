@@ -27,6 +27,16 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Configuração de imagens
+  images: {
+    domains: [
+      'plus.unsplash.com',
+      'images.unsplash.com',
+      'firebasestorage.googleapis.com',
+      'storage.googleapis.com',
+      'lh3.googleusercontent.com'
+    ],
+  },
 };
 
 export default nextConfig;

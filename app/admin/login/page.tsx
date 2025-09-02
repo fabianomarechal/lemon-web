@@ -2,7 +2,7 @@
 
 import Footer from '@/components/footer';
 import Header from '@/components/header';
-import { clientAuth } from '@/lib/firebase';
+import { initializeFirebaseClient } from '@/lib/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -19,6 +19,8 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError('');
 
+    const { clientAuth } = initializeFirebaseClient();
+    
     if (!clientAuth) {
       setError('Erro na inicialização do Firebase. Tente novamente mais tarde.');
       setLoading(false);
@@ -28,7 +30,7 @@ export default function AdminLoginPage() {
     try {
       await signInWithEmailAndPassword(clientAuth, email, password);
       router.push('/admin');
-    } catch (error: Error | unknown) {
+    } catch (error: any) {
       let errorMessage = 'Falha ao fazer login. Verifique suas credenciais.';
       
       if (error && typeof error === 'object' && 'code' in error) {

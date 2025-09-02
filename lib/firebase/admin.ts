@@ -1,9 +1,11 @@
 // Este arquivo deve ser usado APENAS em API routes ou em Server Components
 import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { getStorage } from 'firebase-admin/storage';
 
 // Inicializa Firebase Admin para o servidor (API routes)
 let adminDb;
+let adminStorage;
 
 if (typeof window === 'undefined') {
   const apps = getApps();
@@ -29,6 +31,7 @@ if (typeof window === 'undefined') {
           clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
           privateKey: privateKey,
         }),
+        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
       });
       console.log('Firebase Admin inicializado com sucesso. Project ID:', process.env.FIREBASE_PROJECT_ID);
     } catch (error) {
@@ -51,6 +54,7 @@ if (typeof window === 'undefined') {
   }
 
   adminDb = getFirestore();
+  adminStorage = getStorage();
 }
 
-export { adminDb };
+export { adminDb, adminStorage };

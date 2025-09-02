@@ -1,6 +1,6 @@
 'use client';
 
-import { clientAuth } from '@/lib/firebase';
+import { initializeFirebaseClient } from '@/lib/firebase';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,8 @@ export default function AdminAuthStatus() {
   const router = useRouter();
 
   useEffect(() => {
+    const { clientAuth } = initializeFirebaseClient();
+    
     if (!clientAuth) {
       console.error("Auth não inicializado corretamente");
       setLoading(false);
@@ -27,6 +29,8 @@ export default function AdminAuthStatus() {
   }, []);
 
   const handleLogout = async () => {
+    const { clientAuth } = initializeFirebaseClient();
+    
     if (!clientAuth) {
       console.error("Auth não inicializado corretamente");
       return;

@@ -2,6 +2,7 @@
 import { initializeApp as initializeClientApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore as getClientFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 // Configuração do Firebase Client
 const clientConfig = {
@@ -14,21 +15,25 @@ const clientConfig = {
 };
 
 // Inicializa Firebase do lado do cliente
-let clientApp;
-let clientDb;
-let clientAuth;
+let clientApp = null;
+let clientDb = null;
+let clientAuth = null;
+let clientStorage = null;
 
-if (typeof window !== 'undefined') {
-  try {
-    clientApp = initializeClientApp(clientConfig);
-    clientDb = getClientFirestore(clientApp);
-    clientAuth = getAuth(clientApp);
-    
-    // Adicionar um log para depuração
-    console.log('Firebase Auth inicializado com sucesso', !!clientAuth);
-  } catch (error) {
-    console.error('Erro na inicialização do Firebase cliente:', error);
+// Este código só será executado no lado do cliente
+const initializeFirebaseClient = () => {
+  if (!clientApp && typeof window !== 'undefined') {
+    try {
+      clientApp = initializeClientApp(clientConfig);
+      clientDb = getClientFirestore(clientApp);
+      clientAuth = getAuth(clientApp);
+      clientStorage = getStorage(clientApp);
+    } catch (error) {
+      console.error('Erro na inicialização do Firebase cliente:', error);
+    }
   }
-}
+  return { clientApp, clientAuth, clientDb, clientStorage };
+};
 
-export { clientApp, clientAuth, clientDb };
+// Exportar a função de inicialização em vez das variáveis diretamente
+export { initializeFirebaseClient };

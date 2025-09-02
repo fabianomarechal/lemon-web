@@ -4,7 +4,7 @@ import AdminAuthStatus from "@/components/admin-auth-status";
 import AdminProtect from "@/components/admin-protect";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import { clientAuth } from "@/lib/firebase";
+import { initializeFirebaseClient } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
@@ -13,6 +13,8 @@ export default function AdminPage() {
   const router = useRouter();
   
   const handleLogout = async () => {
+    const { clientAuth } = initializeFirebaseClient();
+    
     if (!clientAuth) {
       console.error('Auth não está inicializado');
       return;

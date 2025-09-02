@@ -2,7 +2,7 @@
 
 import Footer from '@/components/footer';
 import Header from '@/components/header';
-import { clientAuth } from '@/lib/firebase';
+import { initializeFirebaseClient } from '@/lib/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 
@@ -27,6 +27,8 @@ export default function ConfigPage() {
       return;
     }
     
+    const { clientAuth } = initializeFirebaseClient();
+    
     if (!clientAuth) {
       setError('Erro na inicialização do Firebase. Tente novamente mais tarde.');
       return;
@@ -42,7 +44,7 @@ export default function ConfigPage() {
       setSuccess('Usuário administrador criado com sucesso! Agora você pode fazer login.');
       setPassword('');
       setConfirmPassword('');
-    } catch (error: Error | unknown) {
+    } catch (error: any) {
       console.error('Erro ao criar usuário:', error);
       
       if (error && typeof error === 'object' && 'code' in error) {

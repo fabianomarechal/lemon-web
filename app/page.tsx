@@ -1,6 +1,7 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import Link from "next/link";
+import { adminDb } from "@/lib/firebase/admin";
 
 // Definição inline do tipo para evitar problemas de importação
 interface ProdutoSimples {
@@ -12,29 +13,47 @@ interface ProdutoSimples {
   destaque?: boolean;
 }
 
-export default async function HomePage() {
-  // Buscar produtos em destaque pelo lado do cliente
-  const produtosDestaque: ProdutoSimples[] = [];
-  
+async function getProdutosDestaque(): Promise<ProdutoSimples[]> {
   try {
-    // Usando a URL absoluta que funciona em qualquer ambiente
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NODE_ENV === 'development' 
-        ? 'http://localhost:3000' 
-        : '';
+    if (!adminDb) {
+      console.error('Firebase Admin não inicializado');
+      return [];
+    }
+
+    console.log('Buscando produtos em destaque diretamente do Firebase');
     
-    const res = await fetch(new URL('/api/produtos?destaque=true', baseUrl || 'http://localhost:3000'), {
-      next: { revalidate: 300 } // Revalidate a cada 5 minutos
+    const snapshot = await adminDb
+      .collection('produtos')
+      .where('destaque', '==', true)
+      .limit(4)
+      .get();
+    
+    console.log('Documentos encontrados:', snapshot.size);
+    
+    const produtos: ProdutoSimples[] = [];
+    
+    snapshot.forEach((doc: any) => {
+      const data = doc.data();
+      produtos.push({
+        id: doc.id,
+        nome: data.nome || '',
+        descricao: data.descricao || '',
+        preco: data.preco || 0,
+        imagens: data.imagens || [],
+        destaque: data.destaque || false,
+      });
     });
     
-    if (res.ok) {
-      const data = await res.json();
-      produtosDestaque.push(...data);
-    }
+    console.log('Produtos retornados:', produtos.length);
+    return produtos;
   } catch (error) {
     console.error('Erro ao buscar produtos em destaque:', error);
+    return [];
   }
+}
+
+export default async function HomePage() {
+  const produtosDestaque = await getProdutosDestaque();
   
   // Cores alternadas para os produtos
   const bgColors = [

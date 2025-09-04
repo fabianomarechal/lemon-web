@@ -9,34 +9,39 @@ import { useEffect, useState } from 'react';
 
 export default function ProdutosPage() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
-  const [, setCategorias] = useState<string[]>([]);
+  const [todosProdutos, setTodosProdutos] = useState<Produto[]>([]);
+  const [categorias, setCategorias] = useState<string[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Categorias pré-definidas para exibição
-  const categoriesDisplay = [
-    { name: "Cadernos & Agendas", icon: "📓", count: 0 },
-    { name: "Canetas & Lápis", icon: "✏️", count: 0 },
-    { name: "Adesivos & Washi Tapes", icon: "🎨", count: 0 },
-    { name: "Organizadores", icon: "📁", count: 0 },
-    { name: "Papéis Especiais", icon: "📄", count: 0 },
-    { name: "Kits Criativos", icon: "🎁", count: 0 },
-  ]
+  // Categorias dinâmicas baseadas nos produtos reais
+  const categoriesDisplay = categorias.map(cat => ({
+    name: cat,
+    icon: getCategoryIcon(cat),
+    count: todosProdutos.filter(p => p.categorias.includes(cat)).length
+  }));
+
+  // Função para definir ícones para categorias
+  function getCategoryIcon(categoria: string): string {
+    const lowerCat = categoria.toLowerCase();
+    if (lowerCat.includes('caderno') || lowerCat.includes('agenda')) return "📓";
+    if (lowerCat.includes('caneta') || lowerCat.includes('lápis') || lowerCat.includes('escrita')) return "✏️";
+    if (lowerCat.includes('adesivo') || lowerCat.includes('washi') || lowerCat.includes('tape')) return "🎨";
+    if (lowerCat.includes('organizador') || lowerCat.includes('pasta')) return "📁";
+    if (lowerCat.includes('papel') || lowerCat.includes('folha')) return "📄";
+    if (lowerCat.includes('kit') || lowerCat.includes('conjunto')) return "🎁";
+    return "📋"; // ícone padrão
+  }
 
   useEffect(() => {
-    async function carregarProdutos() {
+    async function carregarTodosProdutos() {
       try {
         setLoading(true);
-        // Construir a URL usando window.location.origin para garantir que seja válida
         const baseUrl = window.location.origin;
-        const urlPath = categoriaSelecionada 
-          ? `/api/produtos?categoria=${encodeURIComponent(categoriaSelecionada)}`
-          : '/api/produtos';
-        
-        const fullUrl = `${baseUrl}${urlPath}`;
+        const fullUrl = `${baseUrl}/api/produtos`;
           
-        console.log('Tentando buscar produtos de:', fullUrl);
+        console.log('Carregando todos os produtos de:', fullUrl);
         const res = await fetch(fullUrl);
         
         if (!res.ok) {
@@ -45,13 +50,21 @@ export default function ProdutosPage() {
         
         const data = await res.json();
         console.log('Produtos carregados:', data);
-        setProdutos(data);
+        setTodosProdutos(data);
         
         // Extrair categorias únicas
-        if (!categoriaSelecionada) {
-          const todasCategorias = data.flatMap((p: Produto) => p.categorias);
-          const categoriasUnicas = [...new Set(todasCategorias)];
-          setCategorias(categoriasUnicas);
+        const todasCategorias = data.flatMap((p: Produto) => p.categorias);
+        const categoriasUnicas = [...new Set(todasCategorias)] as string[];
+        setCategorias(categoriasUnicas);
+        
+        // Filtrar produtos baseado na categoria selecionada
+        if (categoriaSelecionada) {
+          const produtosFiltrados = data.filter((p: Produto) => 
+            p.categorias.includes(categoriaSelecionada)
+          );
+          setProdutos(produtosFiltrados);
+        } else {
+          setProdutos(data);
         }
       } catch (err) {
         console.error('Erro ao carregar produtos:', err);
@@ -61,8 +74,22 @@ export default function ProdutosPage() {
       }
     }
     
-    carregarProdutos();
-  }, [categoriaSelecionada]);
+    carregarTodosProdutos();
+  }, []);
+
+  // Efeito separado para filtrar quando a categoria muda
+  useEffect(() => {
+    if (todosProdutos.length > 0) {
+      if (categoriaSelecionada) {
+        const produtosFiltrados = todosProdutos.filter(p => 
+          p.categorias.includes(categoriaSelecionada)
+        );
+        setProdutos(produtosFiltrados);
+      } else {
+        setProdutos(todosProdutos);
+      }
+    }
+  }, [categoriaSelecionada, todosProdutos]);
 
   return (
     <div className="min-h-screen">
@@ -81,21 +108,48 @@ export default function ProdutosPage() {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Categorias</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-              {categoriesDisplay.map((category, index) => (
+            
+            {categorias.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                {/* Botão "Todos os Produtos" */}
                 <div
-                  key={index}
-                  className="text-center p-6 rounded-lg bg-gray-50 hover:bg-cyan-50 transition-colors cursor-pointer border border-cyan-100"
-                  onClick={() => setCategoriaSelecionada(category.name)}
+                  className={`text-center p-6 rounded-lg transition-colors cursor-pointer border ${
+                    !categoriaSelecionada 
+                      ? 'bg-teal-100 border-teal-300 text-teal-800' 
+                      : 'bg-gray-50 hover:bg-cyan-50 border-cyan-100'
+                  }`}
+                  onClick={() => setCategoriaSelecionada(null)}
                 >
-                  <div className="text-4xl mb-3">{category.icon}</div>
-                  <h3 className="font-semibold text-gray-800 mb-1">{category.name}</h3>
+                  <div className="text-4xl mb-3">🛍️</div>
+                  <h3 className="font-semibold text-gray-800 mb-1">Todos</h3>
                   <p className="text-sm text-gray-600">
-                    {produtos.filter(p => p.categorias.includes(category.name)).length} produtos
+                    {todosProdutos.length} produtos
                   </p>
                 </div>
-              ))}
-            </div>
+
+                {categoriesDisplay.map((category, index) => (
+                  <div
+                    key={index}
+                    className={`text-center p-6 rounded-lg transition-colors cursor-pointer border ${
+                      categoriaSelecionada === category.name 
+                        ? 'bg-teal-100 border-teal-300 text-teal-800' 
+                        : 'bg-gray-50 hover:bg-cyan-50 border-cyan-100'
+                    }`}
+                    onClick={() => setCategoriaSelecionada(category.name)}
+                  >
+                    <div className="text-4xl mb-3">{category.icon}</div>
+                    <h3 className="font-semibold text-gray-800 mb-1">{category.name}</h3>
+                    <p className="text-sm text-gray-600">
+                      {category.count} produtos
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500">Carregando categorias...</p>
+              </div>
+            )}
           </div>
         </section>
 

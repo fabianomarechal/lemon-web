@@ -108,6 +108,7 @@ export default function AdminProdutos() {
                 <th className="py-3 px-4 text-left">Nome</th>
                 <th className="py-3 px-4 text-left">Categoria</th>
                 <th className="py-3 px-4 text-left">Preço</th>
+                <th className="py-3 px-4 text-left">Peso</th>
                 <th className="py-3 px-4 text-left">Estoque</th>
                 <th className="py-3 px-4 text-left">Destaque</th>
                 <th className="py-3 px-4 text-center">Ações</th>
@@ -116,7 +117,7 @@ export default function AdminProdutos() {
             <tbody>
               {produtos.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-4 px-4 text-center text-gray-500">
+                  <td colSpan={7} className="py-4 px-4 text-center text-gray-500">
                     Nenhum produto cadastrado.
                   </td>
                 </tr>
@@ -130,6 +131,14 @@ export default function AdminProdutos() {
                         style: 'currency',
                         currency: 'BRL'
                       }).format(produto.preco)}
+                    </td>
+                    <td className="py-3 px-4">
+                      {produto.peso && produto.peso > 0 
+                        ? produto.peso >= 1000 
+                          ? `${(produto.peso / 1000).toFixed(produto.peso % 1000 === 0 ? 0 : 1)} kg`
+                          : `${produto.peso} g`
+                        : '-'
+                      }
                     </td>
                     <td className="py-3 px-4">{produto.estoque}</td>
                     <td className="py-3 px-4">{produto.destaque ? 'Sim' : 'Não'}</td>

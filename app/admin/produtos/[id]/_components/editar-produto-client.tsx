@@ -20,6 +20,7 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
     nome: '',
     descricao: '',
     preco: 0,
+    peso: 0,
     categorias: [],
     cores: [],
     imagens: [],
@@ -63,6 +64,7 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
             nome: produto.nome,
             descricao: produto.descricao,
             preco: produto.preco,
+            peso: produto.peso || 0,
             categorias: produto.categorias || [],
             cores: produto.cores || [],
             imagens: produto.imagens || [],
@@ -90,6 +92,11 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
         [name]: (e.target as HTMLInputElement).checked
       }));
     } else if (name === 'preco') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: parseFloat(value) || 0
+      }));
+    } else if (name === 'peso') {
       setFormData(prev => ({
         ...prev,
         [name]: parseFloat(value) || 0
@@ -240,6 +247,22 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
                       value={formData.preco}
                       onChange={handleInputChange}
                       required
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  {/* Peso */}
+                  <div>
+                    <label htmlFor="peso" className="block text-sm font-medium text-gray-700">Peso (gramas)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      id="peso"
+                      name="peso"
+                      value={formData.peso}
+                      onChange={handleInputChange}
+                      min="0"
+                      placeholder="0.00"
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>

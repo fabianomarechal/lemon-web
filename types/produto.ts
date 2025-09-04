@@ -3,6 +3,7 @@ export interface Produto {
   nome: string;
   descricao: string;
   preco: number;
+  peso?: number; // Peso em gramas
   categorias: string[];
   cores: string[]; // Array de IDs das cores
   imagens: string[];

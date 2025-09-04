@@ -146,6 +146,18 @@ export default function DetalheProdutoClient({ id }: DetalheProdutoClientProps) 
                 )}
               </div>
               
+              {produto.peso && produto.peso > 0 && (
+                <div className="mb-6">
+                  <p className="font-semibold mb-2 text-gray-800">Peso:</p>
+                  <span className="text-gray-600">
+                    {produto.peso >= 1000 
+                      ? `${(produto.peso / 1000).toFixed(produto.peso % 1000 === 0 ? 0 : 1)} kg`
+                      : `${produto.peso} g`
+                    }
+                  </span>
+                </div>
+              )}
+              
               <div className="prose max-w-none mb-6">
                 <h3 className="text-xl font-semibold mb-2 text-gray-800">Descrição</h3>
                 <p className="text-gray-600">{produto.descricao}</p>

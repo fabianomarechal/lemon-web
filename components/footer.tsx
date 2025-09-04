@@ -8,15 +8,15 @@ export default function Footer() {
           <span className="text-3xl">🍋</span>
           <span className="font-fredoka text-2xl text-white ml-2">Lemon</span>
         </div>
-        <p className="mb-4">© 2024 Lemon - Papelaria Criativa. Todos os direitos reservados.</p>
+        <p className="mb-4 text-gray-300">© 2024 Lemon - Papelaria Criativa. Todos os direitos reservados.</p>
         <div className="flex justify-center space-x-4">
-          <Link href="https://www.instagram.com/lemonpapelaria/" className="hover:text-pink-400 transition-colors">
+          <Link href="https://www.instagram.com/lemonpapelaria/" className="hover:text-cyan-400 transition-colors text-gray-300">
             Instagram
           </Link>
-          <Link href="#" className="hover:text-pink-400 transition-colors">
+          <Link href="#" className="hover:text-cyan-400 transition-colors text-gray-300">
             Facebook
           </Link>
-          <Link href="#" className="hover:text-pink-400 transition-colors">
+          <Link href="#" className="hover:text-cyan-400 transition-colors text-gray-300">
             Pinterest
           </Link>
         </div>

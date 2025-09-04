@@ -3,7 +3,7 @@
 import AdminAuthStatus from '@/components/admin-auth-status';
 import AdminProtect from '@/components/admin-protect';
 import MultiImageUpload from '@/components/multi-image-upload';
-import { ProdutoFormData, Cor } from '@/types/produto';
+import { Cor, ProdutoFormData } from '@/types/produto';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';

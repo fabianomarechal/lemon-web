@@ -34,7 +34,7 @@ export default function ContatoPage() {
 
       <main>
         {/* Hero Section */}
-        <section className="py-16 bg-gradient-to-r from-yellow-300 via-pink-300 to-blue-300 text-white text-center">
+        <section className="py-16 bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-500 text-white text-center">
           <div className="container mx-auto px-6">
             <h1 className="font-fredoka text-5xl md:text-6xl mb-4 text-shadow">Contato</h1>
             <p className="text-xl md:text-2xl">Estamos aqui para ajudar! Entre em contato conosco</p>
@@ -167,7 +167,7 @@ export default function ContatoPage() {
 
                   <button
                     type="submit"
-                    className="w-full bg-pink-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-pink-600 transition-colors"
+                    className="w-full bg-teal-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-teal-600 transition-colors shadow-lg"
                   >
                     Enviar Mensagem
                   </button>

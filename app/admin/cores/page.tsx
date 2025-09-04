@@ -2,7 +2,7 @@
 
 import Footer from '@/components/footer';
 import Header from '@/components/header';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Cor {
   id?: string;

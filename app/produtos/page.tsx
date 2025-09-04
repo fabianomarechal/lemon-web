@@ -1,8 +1,8 @@
 'use client';
 
+import CoresProduto from "@/components/cores-produto";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import CoresProduto from "@/components/cores-produto";
 import { Produto } from '@/types/produto';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -70,10 +70,10 @@ export default function ProdutosPage() {
 
       <main>
         {/* Hero Section */}
-        <section className="py-16 bg-gradient-to-r from-yellow-300 via-pink-300 to-blue-300 text-white text-center">
+                <section className="py-16 bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-500 text-white text-center">
           <div className="container mx-auto px-6">
-            <h1 className="font-fredoka text-5xl md:text-6xl mb-4 text-shadow">Nossos Produtos</h1>
-            <p className="text-xl md:text-2xl">Descubra nossa coleção completa de papelaria criativa</p>
+            <h1 className="text-4xl font-bold mb-4">Nossos Produtos</h1>
+            <p className="text-xl">Descubra nossa coleção de papelaria criativa</p>
           </div>
         </section>
 
@@ -85,7 +85,7 @@ export default function ProdutosPage() {
               {categoriesDisplay.map((category, index) => (
                 <div
                   key={index}
-                  className="text-center p-6 rounded-lg bg-gray-50 hover:bg-yellow-100 transition-colors cursor-pointer"
+                  className="text-center p-6 rounded-lg bg-gray-50 hover:bg-cyan-50 transition-colors cursor-pointer border border-cyan-100"
                   onClick={() => setCategoriaSelecionada(category.name)}
                 >
                   <div className="text-4xl mb-3">{category.icon}</div>
@@ -109,7 +109,7 @@ export default function ProdutosPage() {
               {categoriaSelecionada && (
                 <button 
                   onClick={() => setCategoriaSelecionada(null)}
-                  className="text-yellow-600 hover:text-yellow-800"
+                  className="text-teal-600 hover:text-teal-800"
                 >
                   Voltar para todos
                 </button>
@@ -140,7 +140,7 @@ export default function ProdutosPage() {
                     key={produto.id}
                     className="rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300"
                   >
-                    <div className="w-full h-56 bg-gradient-to-br from-yellow-200 to-pink-200 flex items-center justify-center">
+                    <div className="w-full h-56 bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center">
                       {produto.imagens && produto.imagens.length > 0 ? (
                         <img 
                           src={produto.imagens[0]} 
@@ -156,7 +156,7 @@ export default function ProdutosPage() {
                         {produto.categorias.slice(0, 1).map(cat => (
                           <span 
                             key={cat} 
-                            className="text-xs text-gray-500 uppercase tracking-wide"
+                            className="text-xs text-teal-600 uppercase tracking-wide font-medium"
                           >
                             {cat}
                           </span>
@@ -172,13 +172,13 @@ export default function ProdutosPage() {
                       )}
                       
                       <div className="mt-4 flex justify-between items-center">
-                        <span className="font-bold text-xl text-pink-500">
+                        <span className="font-bold text-xl text-teal-600">
                           {new Intl.NumberFormat('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
                           }).format(produto.preco)}
                         </span>
-                        <div className="bg-yellow-400 text-white px-4 py-2 rounded-full hover:bg-yellow-500 transition-colors">
+                        <div className="bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-teal-600 transition-colors">
                           Comprar
                         </div>
                       </div>

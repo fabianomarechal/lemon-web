@@ -31,7 +31,7 @@ export default function SobrePage() {
 
       <main>
         {/* Hero Section */}
-        <section className="py-16 bg-gradient-to-r from-yellow-300 via-pink-300 to-blue-300 text-white text-center">
+        <section className="py-16 bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-500 text-white text-center">
           <div className="container mx-auto px-6">
             <h1 className="font-fredoka text-5xl md:text-6xl mb-4 text-shadow">Sobre Nós</h1>
             <p className="text-xl md:text-2xl max-w-2xl mx-auto">
@@ -62,7 +62,7 @@ export default function SobrePage() {
                     escolhido com carinho para inspirar momentos especiais no seu dia a dia.
                   </p>
                 </div>
-                <div className="bg-gradient-to-br from-yellow-200 to-pink-200 rounded-lg p-8 text-center">
+                <div className="bg-gradient-to-br from-cyan-200 to-blue-200 rounded-lg p-8 text-center">
                   <div className="text-8xl mb-4">🍋</div>
                   <h3 className="font-fredoka text-2xl text-gray-800 mb-2">Lemon</h3>
                   <p className="text-gray-600">Papelaria que inspira</p>

@@ -52,7 +52,7 @@ export default function DetalheProdutoPage() {
       <main className="container mx-auto py-8 px-4">
         <button 
           onClick={() => router.back()}
-          className="mb-6 flex items-center text-yellow-600 hover:text-yellow-800"
+          className="mb-6 flex items-center text-teal-600 hover:text-teal-700 font-medium"
         >
           ← Voltar
         </button>
@@ -68,7 +68,7 @@ export default function DetalheProdutoPage() {
             </div>
             <button 
               onClick={() => router.push('/produtos')}
-              className="bg-yellow-500 text-white py-2 px-4 rounded"
+              className="bg-teal-500 text-white py-2 px-4 rounded hover:bg-teal-600 transition-colors"
             >
               Voltar para produtos
             </button>
@@ -77,7 +77,7 @@ export default function DetalheProdutoPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Galeria de Imagens */}
             <div>
-              <div className="aspect-square overflow-hidden bg-gray-100 rounded-lg mb-4">
+              <div className="aspect-square overflow-hidden bg-cyan-50 rounded-lg mb-4 border border-cyan-100">
                 {produto.imagens && produto.imagens.length > 0 ? (
                   <img 
                     src={produto.imagens[imagemAtiva]} 
@@ -85,7 +85,7 @@ export default function DetalheProdutoPage() {
                     className="w-full h-full object-contain"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                  <div className="w-full h-full flex items-center justify-center bg-cyan-100">
                     <span className="text-6xl">🍋</span>
                   </div>
                 )}
@@ -97,7 +97,7 @@ export default function DetalheProdutoPage() {
                     <button 
                       key={index}
                       onClick={() => setImagemAtiva(index)}
-                      className={`w-20 h-20 rounded ${imagemAtiva === index ? 'ring-2 ring-yellow-500' : ''}`}
+                      className={`w-20 h-20 rounded border-2 transition-colors ${imagemAtiva === index ? 'ring-2 ring-teal-500 border-teal-500' : 'border-cyan-200 hover:border-cyan-300'}`}
                     >
                       <img 
                         src={imagem} 
@@ -112,20 +112,20 @@ export default function DetalheProdutoPage() {
             
             {/* Informações do Produto */}
             <div>
-              <h1 className="text-3xl font-bold mb-2">{produto.nome}</h1>
+              <h1 className="text-3xl font-bold mb-2 text-slate-800">{produto.nome}</h1>
               
               <div className="flex flex-wrap gap-1 mb-4">
                 {produto.categorias.map(cat => (
                   <span 
                     key={cat} 
-                    className="text-sm px-2 py-1 bg-yellow-100 text-yellow-800 rounded"
+                    className="text-sm px-2 py-1 bg-cyan-100 text-teal-700 rounded-full"
                   >
                     {cat}
                   </span>
                 ))}
               </div>
               
-              <p className="text-3xl font-bold text-yellow-600 mb-4">
+              <p className="text-3xl font-bold text-teal-600 mb-4">
                 {new Intl.NumberFormat('pt-BR', {
                   style: 'currency',
                   currency: 'BRL'
@@ -133,27 +133,27 @@ export default function DetalheProdutoPage() {
               </p>
               
               <div className="mb-6">
-                <p className="font-semibold mb-2">Disponibilidade:</p>
+                <p className="font-semibold mb-2 text-slate-800">Disponibilidade:</p>
                 {produto.estoque > 0 ? (
-                  <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded">
+                  <span className="inline-block bg-cyan-100 text-teal-800 px-3 py-1 rounded-full">
                     Em estoque ({produto.estoque} {produto.estoque === 1 ? 'unidade' : 'unidades'})
                   </span>
                 ) : (
-                  <span className="inline-block bg-red-100 text-red-800 px-3 py-1 rounded">
+                  <span className="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full">
                     Esgotado
                   </span>
                 )}
               </div>
               
               <div className="prose max-w-none mb-6">
-                <h3 className="text-xl font-semibold mb-2">Descrição</h3>
-                <p>{produto.descricao}</p>
+                <h3 className="text-xl font-semibold mb-2 text-slate-800">Descrição</h3>
+                <p className="text-slate-600">{produto.descricao}</p>
               </div>
               
               <button 
-                className={`w-full py-3 px-4 rounded text-white font-bold ${
+                className={`w-full py-3 px-4 rounded-lg text-white font-bold shadow-lg transition-colors ${
                   produto.estoque > 0 
-                    ? 'bg-yellow-500 hover:bg-yellow-600' 
+                    ? 'bg-teal-500 hover:bg-teal-600' 
                     : 'bg-gray-400 cursor-not-allowed'
                 }`}
                 disabled={produto.estoque <= 0}

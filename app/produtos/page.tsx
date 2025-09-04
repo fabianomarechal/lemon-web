@@ -2,6 +2,7 @@
 
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import CoresProduto from "@/components/cores-produto";
 import { Produto } from '@/types/produto';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -162,6 +163,14 @@ export default function ProdutosPage() {
                         ))}
                       </div>
                       <h3 className="font-semibold text-lg text-gray-800 mt-1">{produto.nome}</h3>
+                      
+                      {/* Cores disponíveis */}
+                      {produto.cores && produto.cores.length > 0 && (
+                        <div className="mt-2">
+                          <CoresProduto coresIds={produto.cores} showLabels={true} size="small" />
+                        </div>
+                      )}
+                      
                       <div className="mt-4 flex justify-between items-center">
                         <span className="font-bold text-xl text-pink-500">
                           {new Intl.NumberFormat('pt-BR', {

@@ -4,6 +4,7 @@ export interface Produto {
   descricao: string;
   preco: number;
   categorias: string[];
+  cores: string[]; // Array de IDs das cores
   imagens: string[];
   estoque: number;
   destaque: boolean;
@@ -12,3 +13,11 @@ export interface Produto {
 }
 
 export interface ProdutoFormData extends Omit<Produto, 'id' | 'dataCriacao' | 'dataAtualizacao'> {}
+
+export interface Cor {
+  id?: string;
+  nome: string;
+  codigo: string; // Código hexadecimal da cor
+  criadoEm?: Date | string;
+  atualizadoEm?: Date | string;
+}

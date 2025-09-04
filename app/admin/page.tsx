@@ -54,6 +54,14 @@ export default function AdminPage() {
               Gerenciar Produtos
             </Link>
           </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Cores</h2>
+            <p className="text-gray-600 mb-4">Gerencie as opções de cores para os produtos.</p>
+            <Link href="/admin/cores" className="bg-purple-500 text-white py-2 px-4 rounded block text-center hover:bg-purple-600 transition-colors">
+              Gerenciar Cores
+            </Link>
+          </div>
           
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Pedidos</h2>

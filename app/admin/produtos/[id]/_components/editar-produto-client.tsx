@@ -3,7 +3,7 @@
 import AdminAuthStatus from '@/components/admin-auth-status';
 import AdminProtect from '@/components/admin-protect';
 import MultiImageUpload from '@/components/multi-image-upload';
-import { ProdutoFormData } from '@/types/produto';
+import { ProdutoFormData, Cor } from '@/types/produto';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -21,17 +21,34 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
     descricao: '',
     preco: 0,
     categorias: [],
+    cores: [],
     imagens: [],
     estoque: 0,
     destaque: false
   });
   
   const [categoriaInput, setCategoriaInput] = useState('');
+  const [coresDisponiveis, setCoresDisponiveis] = useState<Cor[]>([]);
   const [loading, setLoading] = useState(isEdicao);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    // Carregar cores disponíveis
+    async function carregarCores() {
+      try {
+        const res = await fetch('/api/admin/cores');
+        if (res.ok) {
+          const cores = await res.json();
+          setCoresDisponiveis(cores);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar cores:', error);
+      }
+    }
+
+    carregarCores();
+
     if (isEdicao) {
       async function carregarProduto() {
         try {
@@ -47,6 +64,7 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
             descricao: produto.descricao,
             preco: produto.preco,
             categorias: produto.categorias || [],
+            cores: produto.cores || [],
             imagens: produto.imagens || [],
             estoque: produto.estoque,
             destaque: produto.destaque
@@ -103,6 +121,15 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
     setFormData(prev => ({
       ...prev,
       categorias: prev.categorias.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleCorChange = (corId: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      cores: checked 
+        ? [...prev.cores, corId]
+        : prev.cores.filter(id => id !== corId)
     }));
   };
   
@@ -293,6 +320,41 @@ export default function EditarProdutoClient({ id }: EditarProdutoClientProps) {
                         Adicionar
                       </button>
                     </div>
+                  </div>
+                  
+                  {/* Cores */}
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Cores Disponíveis</label>
+                    {coresDisponiveis.length === 0 ? (
+                      <div className="text-gray-500 text-sm">
+                        Nenhuma cor cadastrada ainda. 
+                        <a 
+                          href="/admin/cores" 
+                          target="_blank" 
+                          className="text-blue-600 hover:text-blue-800 ml-1"
+                        >
+                          Cadastrar cores
+                        </a>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        {coresDisponiveis.map((cor) => (
+                          <label key={cor.id} className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={formData.cores.includes(cor.id!)}
+                              onChange={(e) => handleCorChange(cor.id!, e.target.checked)}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            />
+                            <div
+                              className="w-6 h-6 rounded border-2 border-gray-300"
+                              style={{ backgroundColor: cor.codigo }}
+                            ></div>
+                            <span className="text-sm">{cor.nome}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   
                   {/* Imagens */}

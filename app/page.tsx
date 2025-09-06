@@ -1,6 +1,7 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { adminDb } from "@/lib/firebase/admin";
+import Image from "next/image";
 import Link from "next/link";
 
 // Definição inline do tipo para evitar problemas de importação
@@ -72,9 +73,12 @@ export default async function HomePage() {
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 py-24">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-slate-800">Lemon Papelaria</h1>
+            <div className="flex justify-center mb-8">
+              <Image src="/images/girafa-logo-large.svg" alt="Girafa de Papel" width={200} height={200} priority />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-slate-800">Girafa de Papel</h1>
             <p className="text-xl mb-8 max-w-2xl mx-auto text-slate-700">
-              Artigos de papelaria e escritório de qualidade para todas as suas necessidades.
+              Papelaria criativa e artigos únicos para dar vida às suas ideias.
             </p>
             <Link href="/produtos" className="bg-teal-500 text-white py-3 px-8 rounded-lg hover:bg-teal-600 transition-colors text-lg font-medium shadow-lg">
               Ver Produtos

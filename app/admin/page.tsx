@@ -7,7 +7,7 @@ export default function AdminPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Bem-vindo à área administrativa da Lemon</p>
+        <p className="text-gray-600 mt-2">Bem-vindo à área administrativa da Girafa de Papel</p>
       </div>
         
       <div className="grid md:grid-cols-3 gap-6">

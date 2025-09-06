@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 
 export default function ConfigPage() {
-  const [email, setEmail] = useState('admin@lemonpapelaria.com.br');
+  const [email, setEmail] = useState('admin@girafadepapel.com.br');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');

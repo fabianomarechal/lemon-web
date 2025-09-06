@@ -54,7 +54,7 @@ export default function ContatoPage() {
                     <div className="text-2xl">✉️</div>
                     <div>
                       <h3 className="font-semibold text-slate-800">E-mail</h3>
-                      <p className="text-slate-600">contato@lemonpapelaria.com.br</p>
+                      <p className="text-slate-600">contato@girafadepapel.com.br</p>
                     </div>
                   </div>
 
@@ -77,7 +77,7 @@ export default function ContatoPage() {
                 <div className="mt-8">
                   <h3 className="font-semibold text-slate-800 mb-4">Siga-nos nas Redes Sociais</h3>
                   <div className="flex space-x-4">
-                    <a href="https://www.instagram.com/lemonpapelaria/" className="bg-cyan-500 text-white p-3 rounded-full hover:bg-cyan-600 transition-colors">
+                    <a href="https://www.instagram.com/girafadepapel/" className="bg-cyan-500 text-white p-3 rounded-full hover:bg-cyan-600 transition-colors">
                       📷 Instagram
                     </a>
                     <a href="#" className="bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 transition-colors">

@@ -112,7 +112,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           lg:translate-x-0
         `}>
           <div className="flex items-center justify-between h-16 px-6 bg-teal-600">
-            <h1 className="text-xl font-bold text-white">Admin Lemon</h1>
+            <h1 className="text-xl font-bold text-white">Admin Girafa de Papel</h1>
             <button
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden text-white hover:text-gray-200"

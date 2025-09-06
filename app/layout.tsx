@@ -1,5 +1,5 @@
-import type React from "react"
 import { Fredoka as Fredoka_One, Poppins } from "next/font/google"
+import type React from "react"
 import "./globals.css"
 
 const fredokaOne = Fredoka_One({
@@ -16,10 +16,10 @@ const poppins = Poppins({
   variable: "--font-poppins",
 })
 
-export const metadata = {
-  title: "Lemon - Papelaria Criativa",
-  description: "Papelaria fofa e criativa com produtos únicos",
-}
+export const metadata: Metadata = {
+  title: "Girafa de Papel - Papelaria Criativa",
+  description: "Sua papelaria criativa online. Produtos únicos e de qualidade.",
+};
 
 export default function RootLayout({
   children,

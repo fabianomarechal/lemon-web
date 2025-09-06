@@ -2,8 +2,8 @@
 
 import { Produto } from '@/types/produto';
 import Link from 'next/link';
-import { useEffect, useState, useMemo } from 'react';
-import { FaEdit, FaPlus, FaTrash, FaSearch, FaFilter, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useEffect, useMemo, useState } from 'react';
+import { FaChevronLeft, FaChevronRight, FaEdit, FaFilter, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
 
 export default function AdminProdutos() {
   const [todosProdutos, setTodosProdutos] = useState<Produto[]>([]);

@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
@@ -10,9 +11,9 @@ export default function Header() {
     <header className="bg-white shadow-md border-b border-cyan-100">
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
         <div className="flex items-center">
-          <span className="text-4xl">🍋</span>
-          <Link href="/" className="font-fredoka text-3xl text-teal-600 ml-2 hover:text-teal-700 transition-colors">
-            Lemon
+          <Image src="/images/girafa-logo.svg" alt="Girafa de Papel" width={40} height={40} className="mr-2" />
+          <Link href="/" className="font-fredoka text-3xl text-teal-600 hover:text-teal-700 transition-colors">
+            Girafa de Papel
           </Link>
         </div>
 

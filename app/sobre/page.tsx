@@ -1,5 +1,8 @@
-import Footer from "@/components/footer"
-import Header from "@/components/header"
+'use client';
+
+import Footer from '@/components/footer';
+import Header from '@/components/header';
+import Image from 'next/image';
 
 export default function SobrePage() {
   const values = [
@@ -35,7 +38,7 @@ export default function SobrePage() {
           <div className="container mx-auto px-6">
             <h1 className="font-fredoka text-5xl md:text-6xl mb-4 text-shadow">Sobre Nós</h1>
             <p className="text-xl md:text-2xl max-w-2xl mx-auto">
-              Conheça a história por trás da Lemon e nossa paixão por papelaria criativa
+              Conheça a história por trás da Girafa de Papel e nossa paixão por papelaria criativa
             </p>
           </div>
         </section>
@@ -48,24 +51,21 @@ export default function SobrePage() {
                 <div>
                   <h2 className="text-3xl font-bold text-slate-800 mb-6">Nossa História</h2>
                   <p className="text-slate-600 mb-4">
-                    A Lemon nasceu do sonho de duas amigas apaixonadas por papelaria e criatividade. Em 2020, durante a
-                    pandemia, descobrimos que pequenos momentos criativos podem transformar nosso dia e trazer mais cor
-                    para nossa rotina.
+                    A Girafa de Papel nasceu do sonho de criar um espaço onde a criatividade e a imaginação pudessem voar alto. Como uma girafa que alcança as alturas mais elevadas, nossa marca representa a busca constante por inspiração e originalidade.
                   </p>
                   <p className="text-slate-600 mb-4">
-                    Começamos vendendo produtos artesanais para amigos e família, e logo percebemos que havia uma
-                    comunidade inteira de pessoas que, assim como nós, encontravam alegria nos detalhes fofos e
-                    coloridos da papelaria.
+                    Começamos com a missão de oferecer produtos de papelaria únicos e especiais, que despertem a criança interior em cada pessoa. Acreditamos que cada folha em branco é uma oportunidade de criar algo extraordinário.
                   </p>
                   <p className="text-slate-600">
-                    Hoje, a Lemon é mais que uma loja - é um espaço onde a criatividade floresce e onde cada produto é
-                    escolhido com carinho para inspirar momentos especiais no seu dia a dia.
+                    Hoje, a Girafa de Papel é mais que uma loja - é um universo onde sonhos tomam forma no papel e onde cada produto é escolhido com carinho para inspirar momentos mágicos de criação.
                   </p>
                 </div>
-                <div className="bg-gradient-to-br from-cyan-200 to-blue-200 rounded-lg p-8 text-center">
-                  <div className="text-8xl mb-4">🍋</div>
-                  <h3 className="font-fredoka text-2xl text-slate-800 mb-2">Lemon</h3>
-                  <p className="text-slate-600">Papelaria que inspira</p>
+                <div className="bg-gradient-to-br from-yellow-100 to-orange-200 rounded-lg p-8 text-center">
+                  <div className="flex justify-center mb-4">
+                    <Image src="/images/girafa-logo.svg" alt="Girafa de Papel" width={80} height={80} />
+                  </div>
+                  <h3 className="font-fredoka text-2xl text-slate-800 mb-2">Girafa de Papel</h3>
+                  <p className="text-slate-600">Criatividade que alcança as alturas</p>
                 </div>
               </div>
             </div>
@@ -98,8 +98,8 @@ export default function SobrePage() {
                 produtos de papelaria cuidadosamente selecionados, criando momentos especiais no dia a dia de cada
                 cliente.&quot;
               </p>
-              <div className="bg-cyan-50 rounded-lg p-8 border border-cyan-100">
-                <h3 className="font-semibold text-lg text-slate-800 mb-4">Por que escolher a Lemon?</h3>
+              <div className="bg-yellow-50 rounded-lg p-8 border border-yellow-200">
+                <h3 className="font-semibold text-lg text-slate-800 mb-4">Por que escolher a Girafa de Papel?</h3>
                 <div className="grid md:grid-cols-3 gap-6 text-sm text-slate-600">
                   <div>
                     <strong>Curadoria Especial:</strong> Cada produto é escolhido pensando na qualidade e no design

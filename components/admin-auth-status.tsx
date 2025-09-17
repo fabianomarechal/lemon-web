@@ -9,9 +9,16 @@ import { useEffect, useState } from 'react';
 export default function AdminAuthStatus() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    
     const { clientAuth } = initializeFirebaseClient();
     
     if (!clientAuth) {
@@ -26,7 +33,7 @@ export default function AdminAuthStatus() {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [mounted]);
 
   const handleLogout = async () => {
     const { clientAuth } = initializeFirebaseClient();
@@ -44,9 +51,9 @@ export default function AdminAuthStatus() {
     }
   };
 
-  if (loading) {
+  if (loading || !mounted) {
     return (
-      <div className="bg-blue-50 p-4 rounded-lg shadow text-center mb-4">
+      <div className="bg-blue-50 p-4 rounded-lg shadow text-center mb-4" suppressHydrationWarning>
         <p className="text-blue-800">Verificando status de autenticação...</p>
       </div>
     );
@@ -54,7 +61,7 @@ export default function AdminAuthStatus() {
 
   if (!user) {
     return (
-      <div className="bg-yellow-50 p-4 rounded-lg shadow mb-4">
+      <div className="bg-yellow-50 p-4 rounded-lg shadow mb-4" suppressHydrationWarning>
         <p className="text-yellow-800">
           Você não está autenticado. Por favor, faça 
           <Link href="/admin/login" className="underline ml-1">login</Link>.

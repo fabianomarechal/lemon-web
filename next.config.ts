@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // Configurações para melhorar hidratação
+  reactStrictMode: true,
+  
   webpack: (config, { isServer }) => {
     // Apenas no lado do cliente (navegador)
     if (!isServer) {
@@ -34,7 +37,8 @@ const nextConfig: NextConfig = {
       'images.unsplash.com',
       'firebasestorage.googleapis.com',
       'storage.googleapis.com',
-      'lh3.googleusercontent.com'
+      'lh3.googleusercontent.com',
+      'res.cloudinary.com'
     ],
   },
 };

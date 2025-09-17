@@ -1,6 +1,8 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import BannerCarousel from "@/components/banner-carousel";
 import { adminDb } from "@/lib/firebase/admin";
+import { Banner } from "@/lib/types/banner";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -53,8 +55,52 @@ async function getProdutosDestaque(): Promise<ProdutoSimples[]> {
   }
 }
 
+async function getBannersAtivos(): Promise<Banner[]> {
+  try {
+    if (!adminDb) {
+      console.error('Firebase Admin não inicializado');
+      return [];
+    }
+
+    const snapshot = await adminDb
+      .collection('banners')
+      .where('ativo', '==', true)
+      .limit(3)
+      .get();
+    
+    const banners: Banner[] = [];
+    
+    snapshot.forEach((doc: any) => {
+      const data = doc.data();
+      banners.push({
+        id: doc.id,
+        titulo: data.titulo || '',
+        subtitulo: data.subtitulo || '',
+        imagemUrl: data.imagemUrl || '',
+        linkDestino: data.linkDestino || '',
+        textoLink: data.textoLink || 'Ver Produtos',
+        ativo: data.ativo || false,
+        ordem: data.ordem || 1,
+        criadoEm: data.criadoEm?.toDate(),
+        atualizadoEm: data.atualizadoEm?.toDate()
+      });
+    });
+    
+    // Ordenar por ordem no lado do cliente
+    banners.sort((a, b) => a.ordem - b.ordem);
+    
+    return banners;
+  } catch (error) {
+    console.error('Erro ao buscar banners:', error);
+    return [];
+  }
+}
+
 export default async function HomePage() {
-  const produtosDestaque = await getProdutosDestaque();
+  const [produtosDestaque, bannersAtivos] = await Promise.all([
+    getProdutosDestaque(),
+    getBannersAtivos()
+  ]);
   
   // Cores alternadas para os produtos - paleta análoga fria (azuis e verdes)
   const bgColors = [
@@ -71,20 +117,25 @@ export default async function HomePage() {
 
       <main>
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 py-24">
-          <div className="container mx-auto px-4 text-center">
-            <div className="flex justify-center mb-8">
-              <Image src="/images/girafa-logo-large.svg" alt="Girafa de Papel" width={200} height={200} priority />
+        {bannersAtivos.length > 0 ? (
+          <BannerCarousel banners={bannersAtivos} />
+        ) : (
+          // Banner padrão caso não tenha banners cadastrados
+          <section className="bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 py-24">
+            <div className="container mx-auto px-4 text-center">
+              <div className="flex justify-center mb-8">
+                <Image src="/images/girafa-logo-large.svg" alt="Girafa de Papel" width={200} height={200} priority />
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-slate-800">Girafa de Papel</h1>
+              <p className="text-xl mb-8 max-w-2xl mx-auto text-slate-700">
+                Papelaria criativa e artigos únicos para dar vida às suas ideias.
+              </p>
+              <Link href="/produtos" className="bg-teal-500 text-white py-3 px-8 rounded-lg hover:bg-teal-600 transition-colors text-lg font-medium shadow-lg">
+                Ver Produtos
+              </Link>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-slate-800">Girafa de Papel</h1>
-            <p className="text-xl mb-8 max-w-2xl mx-auto text-slate-700">
-              Papelaria criativa e artigos únicos para dar vida às suas ideias.
-            </p>
-            <Link href="/produtos" className="bg-teal-500 text-white py-3 px-8 rounded-lg hover:bg-teal-600 transition-colors text-lg font-medium shadow-lg">
-              Ver Produtos
-            </Link>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Featured Products */}
         <section className="py-16 bg-white">

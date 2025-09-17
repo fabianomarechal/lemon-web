@@ -10,6 +10,7 @@ import {
   FaBox,
   FaCog,
   FaHome,
+  FaImage,
   FaPalette,
   FaShoppingCart,
   FaSignOutAlt,
@@ -45,6 +46,11 @@ const navigationItems: NavItem[] = [
     href: '/admin/cores',
     icon: <FaPalette className="w-5 h-5" />,
     label: 'Cores'
+  },
+  {
+    href: '/admin/banners',
+    icon: <FaImage className="w-5 h-5" />,
+    label: 'Banners'
   },
   {
     href: '/admin/pedidos',

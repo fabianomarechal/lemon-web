@@ -11,7 +11,7 @@ cloudinary.config({
 export { cloudinary };
 
 // Função para fazer upload de imagem
-export async function uploadImage(file: ArrayBuffer, fileType: string, fileName: string) {
+export async function uploadImage(file: ArrayBuffer, fileType: string, fileName: string, folder: string = 'produtos') {
   try {
     // Converter ArrayBuffer para base64
     const buffer = Buffer.from(file);
@@ -19,7 +19,7 @@ export async function uploadImage(file: ArrayBuffer, fileType: string, fileName:
     
     // Fazer upload para o Cloudinary
     const result = await cloudinary.uploader.upload(base64String, {
-      folder: 'produtos',
+      folder: folder,
       public_id: fileName.split('.')[0], // Usar nome do arquivo sem extensão
       resource_type: 'image'
     });

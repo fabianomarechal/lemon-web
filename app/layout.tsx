@@ -1,4 +1,5 @@
 import { Fredoka as Fredoka_One, Poppins } from "next/font/google"
+import type { Metadata } from "next"
 import type React from "react"
 import "./globals.css"
 
@@ -28,7 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className={`${fredokaOne.variable} ${poppins.variable}`}>
-      <body className="font-sans bg-blue-100">{children}</body>
+      <body className="font-sans bg-blue-100" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   )
 }

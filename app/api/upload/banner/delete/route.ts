@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { deleteImage } from '@/lib/cloudinary'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function DELETE(request: NextRequest) {
   try {

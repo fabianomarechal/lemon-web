@@ -6,16 +6,16 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
-  FaBars,
-  FaBox,
-  FaCog,
-  FaHome,
-  FaImage,
-  FaPalette,
-  FaShoppingCart,
-  FaSignOutAlt,
-  FaTimes,
-  FaUsers
+    FaBars,
+    FaBox,
+    FaCog,
+    FaHome,
+    FaImage,
+    FaPalette,
+    FaShoppingCart,
+    FaSignOutAlt,
+    FaTimes,
+    FaUsers
 } from 'react-icons/fa';
 import AdminAuthStatus from './admin-auth-status';
 import AdminProtect from './admin-protect';

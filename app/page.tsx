@@ -1,6 +1,6 @@
+import BannerCarousel from "@/components/banner-carousel";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import BannerCarousel from "@/components/banner-carousel";
 import { adminDb } from "@/lib/firebase/admin";
 import { Banner } from "@/lib/types/banner";
 import Image from "next/image";

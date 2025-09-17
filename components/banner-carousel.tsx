@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Banner } from '@/lib/types/banner'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Banner } from '@/lib/types/banner'
+import { useEffect, useState } from 'react'
 // Ícones inline para evitar dependências externas
 const ChevronLeftIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">

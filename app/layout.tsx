@@ -1,5 +1,5 @@
-import { Fredoka as Fredoka_One, Poppins } from "next/font/google"
 import type { Metadata } from "next"
+import { Fredoka as Fredoka_One, Poppins } from "next/font/google"
 import type React from "react"
 import "./globals.css"
 

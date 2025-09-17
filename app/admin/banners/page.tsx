@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy } from 'firebase/firestore'
+import AdminLayout from '@/components/admin-layout'
 import { initializeFirebaseClient } from '@/lib/firebase/index'
 import { Banner, BannerFormData } from '@/lib/types/banner'
-import AdminLayout from '@/components/admin-layout'
+import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore'
 import Image from 'next/image'
+import { useCallback, useEffect, useState } from 'react'
 
 export default function BannersPage() {
   const [banners, setBanners] = useState<Banner[]>([])

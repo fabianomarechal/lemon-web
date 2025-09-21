@@ -2,6 +2,7 @@
 
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import AdicionarCarrinho from "@/components/carrinho/adicionar-carrinho";
 import { Produto } from '@/types/produto';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -162,16 +163,28 @@ export default function DetalheProdutoPage() {
                 <p className="text-slate-600">{produto.descricao}</p>
               </div>
               
-              <button 
-                className={`w-full py-3 px-4 rounded-lg text-white font-bold shadow-lg transition-colors ${
-                  produto.estoque > 0 
-                    ? 'bg-teal-500 hover:bg-teal-600' 
-                    : 'bg-gray-400 cursor-not-allowed'
-                }`}
-                disabled={produto.estoque <= 0}
-              >
-                {produto.estoque > 0 ? 'Adicionar ao Carrinho' : 'Produto Indisponível'}
-              </button>
+              {produto.estoque > 0 ? (
+                <AdicionarCarrinho
+                  produto={{
+                    id: produto.id || '',
+                    nome: produto.nome,
+                    preco: produto.preco,
+                    imagens: produto.imagens,
+                    categoria: produto.categorias[0]
+                  }}
+                  variantes={{
+                    cores: produto.cores && produto.cores.length > 0 ? produto.cores : undefined
+                  }}
+                  className="w-full"
+                />
+              ) : (
+                <button 
+                  className="w-full py-3 px-4 rounded-lg text-white font-bold shadow-lg bg-gray-400 cursor-not-allowed"
+                  disabled
+                >
+                  Produto Indisponível
+                </button>
+              )}
             </div>
           </div>
         )}

@@ -1,6 +1,8 @@
+import { CarrinhoProvider } from "@/contexts/carrinho-context"
 import type { Metadata } from "next"
 import { Fredoka as Fredoka_One, Poppins } from "next/font/google"
 import type React from "react"
+import { Toaster } from "sonner"
 import "./globals.css"
 
 const fredokaOne = Fredoka_One({
@@ -30,7 +32,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${fredokaOne.variable} ${poppins.variable}`}>
       <body className="font-sans bg-blue-100" suppressHydrationWarning>
-        {children}
+        <CarrinhoProvider>
+          {children}
+        </CarrinhoProvider>
+        <Toaster position="top-right" />
       </body>
     </html>
   )

@@ -1,4 +1,5 @@
 import BannerCarousel from "@/components/banner-carousel";
+import AdicionarCarrinho from "@/components/carrinho/adicionar-carrinho";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { adminDb } from "@/lib/firebase/admin";
@@ -157,38 +158,47 @@ export default async function HomePage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {produtosDestaque.slice(0, 4).map((produto, index) => (
-                  <Link
-                    href={`/produtos/${produto.id}`}
+                  <div
                     key={produto.id}
                     className={`${bgColors[index % bgColors.length]} rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 border border-cyan-100`}
                   >
-                    <div className="w-full h-56 bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center">
-                      {produto.imagens && produto.imagens.length > 0 ? (
-                        <img 
-                          src={produto.imagens[0]} 
-                          alt={produto.nome} 
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-6xl">🍋</span>
-                      )}
-                    </div>
+                    <Link href={`/produtos/${produto.id}`}>
+                      <div className="w-full h-56 bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center cursor-pointer">
+                        {produto.imagens && produto.imagens.length > 0 ? (
+                          <img 
+                            src={produto.imagens[0]} 
+                            alt={produto.nome} 
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-6xl">🍋</span>
+                        )}
+                      </div>
+                    </Link>
                     <div className="p-6">
-                      <h3 className="font-semibold text-lg text-slate-800">{produto.nome}</h3>
+                      <Link href={`/produtos/${produto.id}`}>
+                        <h3 className="font-semibold text-lg text-slate-800 hover:text-teal-600 cursor-pointer">{produto.nome}</h3>
+                      </Link>
                       <p className="text-slate-600 mt-2 line-clamp-2">{produto.descricao}</p>
-                      <div className="mt-4 flex justify-between items-center">
-                        <span className="font-bold text-xl text-teal-600">
+                      <div className="mt-4">
+                        <span className="font-bold text-xl text-teal-600 block mb-3">
                           {new Intl.NumberFormat('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
                           }).format(produto.preco)}
                         </span>
-                        <div className="bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-teal-600 transition-colors">
-                          Comprar
-                        </div>
+                        <AdicionarCarrinho
+                          produto={{
+                            id: produto.id,
+                            nome: produto.nome,
+                            preco: produto.preco,
+                            imagens: produto.imagens
+                          }}
+                          className="w-full"
+                        />
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             )}

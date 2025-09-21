@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
+import IconeCarrinho from "./carrinho/icone-carrinho"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -34,7 +35,7 @@ export default function Header() {
 
         <div className="flex items-center space-x-4">
           <button className="text-slate-600 hover:text-teal-600 transition-colors text-lg">🔍</button>
-          <button className="text-slate-600 hover:text-teal-600 transition-colors text-lg">🛒</button>
+          <IconeCarrinho />
           <button
             className="md:hidden text-slate-600 hover:text-teal-600 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}

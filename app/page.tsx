@@ -7,6 +7,11 @@ import { Banner } from "@/lib/types/banner";
 import Image from "next/image";
 import Link from "next/link";
 
+// Use ISR (Incremental Static Regeneration) for better performance
+// Page will be statically generated but revalidated every 5 minutes
+// AND revalidated immediately when products are updated via revalidatePath()
+export const revalidate = 300 // 5 minutes
+
 // Definição inline do tipo para evitar problemas de importação
 interface ProdutoSimples {
   id: string;

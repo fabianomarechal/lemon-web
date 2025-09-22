@@ -1,6 +1,7 @@
 'use server';
 
 import { adminDb } from '@/lib/firebase/admin';
+import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 // POST - Criar novo produto
@@ -21,10 +22,14 @@ export async function POST(req: NextRequest) {
     
     try {
       const docRef = await adminDb.collection('produtos').add(novoProduto);
-      
-      return NextResponse.json({ 
-        id: docRef.id, 
-        ...novoProduto 
+
+      // Revalidate homepage and products page when new product is created
+      revalidatePath('/');
+      revalidatePath('/produtos');
+
+      return NextResponse.json({
+        id: docRef.id,
+        ...novoProduto
       }, { status: 201 });
     } catch (dbError) {
       console.error('API Admin - Erro ao adicionar ao banco de dados:', dbError);

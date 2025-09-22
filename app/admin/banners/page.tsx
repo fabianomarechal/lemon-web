@@ -85,7 +85,7 @@ export default function BannersPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     try {
       const bannerData = {
         ...formData,
@@ -99,6 +99,17 @@ export default function BannersPage() {
           ...bannerData,
           criadoEm: new Date()
         })
+      }
+
+      // Revalidate homepage after banner changes
+      try {
+        await fetch('/api/revalidate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paths: ['/'] })
+        })
+      } catch (revalidateError) {
+        console.warn('Erro ao revalidar homepage:', revalidateError)
       }
 
       await carregarBanners()
@@ -129,7 +140,7 @@ export default function BannersPage() {
 
     try {
       await deleteDoc(doc(db, 'banners', bannerId))
-      
+
       // Deletar imagem do Cloudinary se existir
       if (imagemUrl && imagemUrl.includes('cloudinary')) {
         try {
@@ -137,13 +148,24 @@ export default function BannersPage() {
           const parts = imagemUrl.split('/')
           const publicIdWithExtension = parts[parts.length - 1]
           const publicId = `banners/${publicIdWithExtension.split('.')[0]}`
-          
+
           await fetch(`/api/upload/banner/delete?publicId=${encodeURIComponent(publicId)}`, {
             method: 'DELETE'
           })
         } catch (error) {
           console.error('Erro ao deletar imagem:', error)
         }
+      }
+
+      // Revalidate homepage after banner deletion
+      try {
+        await fetch('/api/revalidate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paths: ['/'] })
+        })
+      } catch (revalidateError) {
+        console.warn('Erro ao revalidar homepage:', revalidateError)
       }
 
       await carregarBanners()

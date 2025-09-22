@@ -1,6 +1,7 @@
 'use server';
 
 import { adminDb } from '@/lib/firebase/admin';
+import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Buscar um produto específico
@@ -94,7 +95,12 @@ export async function PUT(
       };
       
       await docRef.update(updatedProduct);
-      
+
+      // Revalidate homepage and products page when product is updated
+      revalidatePath('/');
+      revalidatePath('/produtos');
+      revalidatePath(`/produtos/${id}`);
+
       return NextResponse.json({
         id: id,
         ...updatedProduct
@@ -146,7 +152,11 @@ export async function DELETE(
       }
       
       await docRef.delete();
-      
+
+      // Revalidate homepage and products page when product is deleted
+      revalidatePath('/');
+      revalidatePath('/produtos');
+
       return NextResponse.json({ message: 'Produto removido com sucesso' });
     } catch (dbError) {
       console.error('API Admin - Erro ao remover do banco de dados:', dbError);

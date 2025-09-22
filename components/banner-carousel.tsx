@@ -68,22 +68,13 @@ export default function BannerCarousel({ banners }: BannerCarouselProps) {
               src={currentBanner.imagemUrl}
               alt={currentBanner.titulo}
               fill
-              className="object-cover opacity-20 transition-opacity duration-500"
+              className="object-cover transition-opacity duration-500"
               priority
             />
           </div>
         )}
         
         <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="flex justify-center mb-8">
-            <Image 
-              src="/images/girafa-logo-large.svg" 
-              alt="Girafa de Papel" 
-              width={200} 
-              height={200} 
-              priority 
-            />
-          </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-slate-800 animate-fadeIn">
             {currentBanner.titulo}
           </h1>

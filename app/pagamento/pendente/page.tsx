@@ -3,11 +3,11 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { usePaymentStatusPolling } from '@/hooks/use-payment-status'
-import { Clock, Home, Package, RefreshCw } from 'lucide-react'
+import { Clock, Home, Loader2, Package, RefreshCw } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 
-export default function PendentePage() {
+function PendenteContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   
@@ -206,5 +206,30 @@ export default function PendentePage() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function PendentePage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <Card className="text-center">
+              <CardHeader>
+                <div className="flex justify-center mb-4">
+                  <Loader2 className="w-16 h-16 text-blue-600 animate-spin" />
+                </div>
+                <CardTitle className="text-2xl text-gray-900">
+                  Carregando...
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </main>
+    }>
+      <PendenteContent />
+    </Suspense>
   )
 }

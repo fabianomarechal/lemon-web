@@ -1,7 +1,7 @@
 import BannerCarousel from "@/components/banner-carousel";
-import AdicionarCarrinho from "@/components/carrinho/adicionar-carrinho";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import ProdutosCarousel from "@/components/produtos-carousel";
 import { adminDb } from "@/lib/firebase/admin";
 import { Banner } from "@/lib/types/banner";
 import Image from "next/image";
@@ -24,18 +24,18 @@ async function getProdutosDestaque(): Promise<ProdutoSimples[]> {
       return [];
     }
 
-    console.log('Buscando produtos em destaque diretamente do Firebase');
-    
+    console.log('Buscando produtos para carousel diretamente do Firebase');
+
+    // Buscar todos os produtos ativos (não apenas os em destaque)
     const snapshot = await adminDb
       .collection('produtos')
-      .where('destaque', '==', true)
-      .limit(4)
+      .limit(12) // Buscar mais produtos para ter variedade no carousel
       .get();
-    
+
     console.log('Documentos encontrados:', snapshot.size);
-    
+
     const produtos: ProdutoSimples[] = [];
-    
+
     snapshot.forEach((doc: any) => {
       const data = doc.data();
       produtos.push({
@@ -47,11 +47,11 @@ async function getProdutosDestaque(): Promise<ProdutoSimples[]> {
         destaque: data.destaque || false,
       });
     });
-    
+
     console.log('Produtos retornados:', produtos.length);
     return produtos;
   } catch (error) {
-    console.error('Erro ao buscar produtos em destaque:', error);
+    console.error('Erro ao buscar produtos:', error);
     return [];
   }
 }
@@ -103,15 +103,6 @@ export default async function HomePage() {
     getBannersAtivos()
   ]);
   
-  // Cores alternadas para os produtos - paleta análoga fria (azuis e verdes)
-  const bgColors = [
-    'bg-blue-50',
-    'bg-cyan-50',
-    'bg-teal-50',
-    'bg-sky-50',
-    'bg-blue-50',
-  ];
-  
   return (
     <div className="min-h-screen">
       <Header />
@@ -138,7 +129,7 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* Featured Products */}
+        {/* Featured Products Carousel */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
             <div className="flex justify-between items-center mb-10">
@@ -147,61 +138,8 @@ export default async function HomePage() {
                 Ver todos →
               </Link>
             </div>
-            
-            {produtosDestaque.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-slate-500">Nenhum produto em destaque encontrado</p>
-                <Link href="/produtos" className="inline-block mt-4 text-teal-600 hover:text-teal-700">
-                  Ver todos os produtos
-                </Link>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {produtosDestaque.slice(0, 4).map((produto, index) => (
-                  <div
-                    key={produto.id}
-                    className={`${bgColors[index % bgColors.length]} rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 border border-cyan-100`}
-                  >
-                    <Link href={`/produtos/${produto.id}`}>
-                      <div className="w-full h-56 bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center cursor-pointer">
-                        {produto.imagens && produto.imagens.length > 0 ? (
-                          <img 
-                            src={produto.imagens[0]} 
-                            alt={produto.nome} 
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <span className="text-6xl">🍋</span>
-                        )}
-                      </div>
-                    </Link>
-                    <div className="p-6">
-                      <Link href={`/produtos/${produto.id}`}>
-                        <h3 className="font-semibold text-lg text-slate-800 hover:text-teal-600 cursor-pointer">{produto.nome}</h3>
-                      </Link>
-                      <p className="text-slate-600 mt-2 line-clamp-2">{produto.descricao}</p>
-                      <div className="mt-4">
-                        <span className="font-bold text-xl text-teal-600 block mb-3">
-                          {new Intl.NumberFormat('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL'
-                          }).format(produto.preco)}
-                        </span>
-                        <AdicionarCarrinho
-                          produto={{
-                            id: produto.id,
-                            nome: produto.nome,
-                            preco: produto.preco,
-                            imagens: produto.imagens
-                          }}
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+
+            <ProdutosCarousel produtos={produtosDestaque} />
           </div>
         </section>
 

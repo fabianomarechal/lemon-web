@@ -1,6 +1,5 @@
 'use client'
 
-import AdminLayout from '@/components/admin-layout'
 import { initializeFirebaseClient } from '@/lib/firebase/index'
 import { Banner, BannerFormData } from '@/lib/types/banner'
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore'
@@ -171,17 +170,14 @@ export default function BannersPage() {
 
   if (loading || !mounted) {
     return (
-      <AdminLayout>
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500"></div>
-        </div>
-      </AdminLayout>
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500"></div>
+      </div>
     )
   }
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-slate-800">Gerenciar Banners</h1>
           <button
@@ -410,7 +406,6 @@ export default function BannersPage() {
             </div>
           </div>
         )}
-      </div>
-    </AdminLayout>
+    </div>
   )
 }

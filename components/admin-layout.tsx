@@ -192,7 +192,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
 
           {/* Page content */}
-          <main className="p-6">
+          <main className="p-6 max-w-7xl mx-auto">
             {children}
           </main>
         </div>

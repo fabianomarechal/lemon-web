@@ -2,7 +2,8 @@
 
 import { useCarrinho } from '@/contexts/carrinho-context'
 import { ItemCarrinho } from '@/lib/types/carrinho'
-import { useState } from 'react'
+import { Cor } from '@/types/produto'
+import { useEffect, useState } from 'react'
 
 interface AdicionarCarrinhoProps {
   produto: {
@@ -26,6 +27,31 @@ export default function AdicionarCarrinho({ produto, variantes, className = '' }
   const [tamanhoSelecionado, setTamanhoSelecionado] = useState('')
   const [adicionando, setAdicionando] = useState(false)
   const [mostrarSucesso, setMostrarSucesso] = useState(false)
+  const [cores, setCores] = useState<Cor[]>([])
+  const [loadingCores, setLoadingCores] = useState(false)
+
+  // Carregar dados das cores
+  useEffect(() => {
+    async function carregarCores() {
+      if (!variantes?.cores || variantes.cores.length === 0) return
+
+      setLoadingCores(true)
+      try {
+        const response = await fetch('/api/admin/cores')
+        if (response.ok) {
+          const todasCores: Cor[] = await response.json()
+          const coresFiltradas = todasCores.filter(cor => variantes.cores!.includes(cor.id!))
+          setCores(coresFiltradas)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar cores:', error)
+      } finally {
+        setLoadingCores(false)
+      }
+    }
+
+    carregarCores()
+  }, [variantes?.cores])
 
   const handleAdicionarAoCarrinho = () => {
     // Verificar se variantes obrigatórias estão selecionadas
@@ -48,7 +74,7 @@ export default function AdicionarCarrinho({ produto, variantes, className = '' }
       quantidade,
       imagem: produto.imagens?.[0],
       categoria: produto.categoria,
-      cor: corSelecionada || undefined,
+      cor: corSelecionada ? cores.find(c => c.id === corSelecionada)?.nome || corSelecionada : undefined,
       tamanho: tamanhoSelecionado || undefined
     }
 
@@ -80,21 +106,46 @@ export default function AdicionarCarrinho({ produto, variantes, className = '' }
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Cor:
           </label>
-          <div className="flex gap-2 flex-wrap">
-            {variantes.cores.map((cor) => (
-              <button
-                key={cor}
-                onClick={() => setCorSelecionada(cor)}
-                className={`px-3 py-1 text-sm border rounded-md transition-colors ${
-                  corSelecionada === cor
-                    ? 'border-teal-500 bg-teal-50 text-teal-700'
-                    : 'border-slate-300 hover:border-slate-400'
-                }`}
-              >
-                {cor}
-              </button>
-            ))}
-          </div>
+          {loadingCores ? (
+            <div className="text-sm text-slate-500">Carregando cores...</div>
+          ) : cores.length > 0 ? (
+            <div className="flex gap-3 flex-wrap">
+              {cores.map((cor) => (
+                <button
+                  key={cor.id}
+                  onClick={() => setCorSelecionada(cor.id!)}
+                  className={`flex items-center gap-2 px-3 py-2 text-sm border rounded-lg transition-all ${
+                    corSelecionada === cor.id
+                      ? 'border-teal-500 bg-teal-50 text-teal-700 ring-2 ring-teal-200'
+                      : 'border-slate-300 hover:border-slate-400 hover:bg-slate-50'
+                  }`}
+                >
+                  <div
+                    className="w-4 h-4 rounded-full border border-slate-300"
+                    style={{ backgroundColor: cor.codigo }}
+                    title={cor.nome}
+                  />
+                  {cor.nome}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex gap-2 flex-wrap">
+              {variantes.cores.map((corId) => (
+                <button
+                  key={corId}
+                  onClick={() => setCorSelecionada(corId)}
+                  className={`px-3 py-1 text-sm border rounded-md transition-colors ${
+                    corSelecionada === corId
+                      ? 'border-teal-500 bg-teal-50 text-teal-700'
+                      : 'border-slate-300 hover:border-slate-400'
+                  }`}
+                >
+                  {corId}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

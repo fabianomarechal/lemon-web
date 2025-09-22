@@ -3,7 +3,7 @@
 import CoresProduto from "@/components/cores-produto";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import { Produto } from '@/types/produto';
+import { Cor, Produto } from '@/types/produto';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -12,6 +12,7 @@ export default function ProdutosPage() {
   const [todosProdutos, setTodosProdutos] = useState<Produto[]>([]);
   const [categorias, setCategorias] = useState<string[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
+  const [cores, setCores] = useState<Cor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,46 +36,59 @@ export default function ProdutosPage() {
   }
 
   useEffect(() => {
-    async function carregarTodosProdutos() {
+    async function carregarDados() {
       try {
         setLoading(true);
         const baseUrl = window.location.origin;
-        const fullUrl = `${baseUrl}/api/produtos`;
-          
-        console.log('Carregando todos os produtos de:', fullUrl);
-        const res = await fetch(fullUrl);
-        
-        if (!res.ok) {
-          throw new Error(`Falha ao carregar produtos: ${res.status} ${res.statusText}`);
+
+        // Carregar produtos e cores em paralelo
+        const [produtosRes, coresRes] = await Promise.all([
+          fetch(`${baseUrl}/api/produtos`),
+          fetch(`${baseUrl}/api/admin/cores`)
+        ]);
+
+        if (!produtosRes.ok) {
+          throw new Error(`Falha ao carregar produtos: ${produtosRes.status} ${produtosRes.statusText}`);
         }
-        
-        const data = await res.json();
-        console.log('Produtos carregados:', data);
-        setTodosProdutos(data);
-        
+
+        if (!coresRes.ok) {
+          throw new Error(`Falha ao carregar cores: ${coresRes.status} ${coresRes.statusText}`);
+        }
+
+        const [produtosData, coresData] = await Promise.all([
+          produtosRes.json(),
+          coresRes.json()
+        ]);
+
+        console.log('Produtos carregados:', produtosData);
+        console.log('Cores carregadas:', coresData);
+
+        setTodosProdutos(produtosData);
+        setCores(coresData);
+
         // Extrair categorias únicas
-        const todasCategorias = data.flatMap((p: Produto) => p.categorias);
+        const todasCategorias = produtosData.flatMap((p: Produto) => p.categorias);
         const categoriasUnicas = [...new Set(todasCategorias)] as string[];
         setCategorias(categoriasUnicas);
-        
+
         // Filtrar produtos baseado na categoria selecionada
         if (categoriaSelecionada) {
-          const produtosFiltrados = data.filter((p: Produto) => 
+          const produtosFiltrados = produtosData.filter((p: Produto) =>
             p.categorias.includes(categoriaSelecionada)
           );
           setProdutos(produtosFiltrados);
         } else {
-          setProdutos(data);
+          setProdutos(produtosData);
         }
       } catch (err) {
-        console.error('Erro ao carregar produtos:', err);
-        setError('Não foi possível carregar os produtos. Tente novamente mais tarde.');
+        console.error('Erro ao carregar dados:', err);
+        setError('Não foi possível carregar os dados. Tente novamente mais tarde.');
       } finally {
         setLoading(false);
       }
     }
-    
-    carregarTodosProdutos();
+
+    carregarDados();
   }, []);
 
   // Efeito separado para filtrar quando a categoria muda
@@ -221,7 +235,12 @@ export default function ProdutosPage() {
                       {/* Cores disponíveis */}
                       {produto.cores && produto.cores.length > 0 && (
                         <div className="mt-2">
-                          <CoresProduto coresIds={produto.cores} showLabels={true} size="small" />
+                          <CoresProduto
+                            coresIds={produto.cores}
+                            showLabels={true}
+                            size="small"
+                            todasCores={cores}
+                          />
                         </div>
                       )}
                       

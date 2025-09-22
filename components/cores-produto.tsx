@@ -7,20 +7,29 @@ interface CoresProdutoProps {
   coresIds: string[];
   showLabels?: boolean;
   size?: 'small' | 'medium' | 'large';
+  todasCores?: Cor[]; // Nova prop opcional para receber todas as cores
 }
 
-export default function CoresProduto({ coresIds, showLabels = false, size = 'small' }: CoresProdutoProps) {
+export default function CoresProduto({ coresIds, showLabels = false, size = 'small', todasCores }: CoresProdutoProps) {
   const [cores, setCores] = useState<Cor[]>([]);
 
   useEffect(() => {
     async function carregarCores() {
       if (coresIds.length === 0) return;
-      
+
+      // Se as cores foram passadas como prop, usar elas
+      if (todasCores) {
+        const coresFiltradas = todasCores.filter(cor => coresIds.includes(cor.id!));
+        setCores(coresFiltradas);
+        return;
+      }
+
+      // Fallback: buscar cores via API (para componentes que ainda não passam as cores)
       try {
         const response = await fetch('/api/admin/cores');
         if (response.ok) {
-          const todasCores: Cor[] = await response.json();
-          const coresFiltradas = todasCores.filter(cor => coresIds.includes(cor.id!));
+          const todasCoresAPI: Cor[] = await response.json();
+          const coresFiltradas = todasCoresAPI.filter(cor => coresIds.includes(cor.id!));
           setCores(coresFiltradas);
         }
       } catch (error) {
@@ -29,7 +38,7 @@ export default function CoresProduto({ coresIds, showLabels = false, size = 'sma
     }
 
     carregarCores();
-  }, [coresIds]);
+  }, [coresIds, todasCores]);
 
   if (cores.length === 0) return null;
 
